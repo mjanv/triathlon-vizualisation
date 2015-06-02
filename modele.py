@@ -23,37 +23,11 @@ import inspect
 
 from collections import Counter, OrderedDict
 
+from src.dec import echo,save_hdf
+
 BASE_URL = u'http://www.triclair.com'
 SEASON_URL = u'/resultats/challenge-triathlon-rhone-alpes.php?saison='
 ATHLETE_URL = u'/resultats/challenge-rhone-alpes-detail-triathlete-'
-
-def echo(msg=''):
-	def echo_inside(fn):
-	    def wrapped(*v, **k):
-	        if v[0].verbose:
-	        	print ":: Calling %s: %s" % (fn.__name__,msg)
-	        	if v[1:] is not ():
-	        		print " - Arguments: %s" % " , ".join(map(str,v[1:]))
-	        		print v,k
-	        		import inspect
-	        		print inspect.getargspec(fn)[0]
-	        	#self.log.log(logging.INFO,"Calling %s: %s" % (fn.__name__,msg))
-	        return fn(*v, **k) 
-	    return wrapped
-	return echo_inside
-
-def save_hdf(name,*args):
-	def save_inside(fn):
-		def wrapped(*v,**k):
-			file_name = "".join((v[0].store_data,name,)+tuple([str(v[inspect.getargspec(fn)[0].index(arg)]) for arg in args]))
-			if os.path.isfile(file_name):
-				return pd.read_hdf(file_name,'df')
-			else:	
-				res = fn(*v,**k)
-				res.to_hdf(file_name,key='df',mode='w')
-				return res
-		return wrapped
-	return save_inside
 
 class TRICLAIRBase(object):
 	_instance = None
