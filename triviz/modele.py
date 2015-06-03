@@ -23,7 +23,7 @@ import inspect
 
 from collections import Counter, OrderedDict
 
-from dec import echo,save_hdf
+from decorator import echo,save_hdf
 
 BASE_URL = u'http://www.triclair.com'
 SEASON_URL = u'/resultats/challenge-triathlon-rhone-alpes.php?saison='
@@ -106,7 +106,7 @@ class TRICLAIRModele(object):
 			which resumes the date, name, format, and link of each triathlon of the specified year. Returns a Pandas DataFrame. """	
 		soup = self.__get_soup_webpage(BASE_URL + SEASON_URL + str(year))
 		l = [(convertDate([a for a in line.previous_siblings][1].text), line.text,line.next_sibling[1:],line.get('href')[2:]) 
-		    for line in soup.find_all('a',href=True) if '-resultats-' in line.get('href')]
+		    	for line in soup.find_all('a',href=True) if '-resultats-' in line.get('href')]
 
 		return pd.DataFrame(l,columns=['date','name','format','link'])
 
@@ -231,27 +231,7 @@ class TRICLAIRView(Tkinter.Tk):
 			S = self.controler.modele.get_data_triathlon(l,n,f,2014)
 			print S['Scratch'].dropna()
 
-def convertDate(s):
-	""" Convert a string under the format of day-month-year into a datetime object. None in case of failure """
-	return datetime.strptime(s,'%d-%m-%Y')
 
-def convertChrono(s):
-	""" Convert a string under the format of hours:minutes:seconds into a timedelta object """
-	strp = s.strip().split(':')
-	return timedelta(hours=int(strp[0]),minutes=int(strp[1]),seconds=int(strp[2]))
-
-def remove_accents(data):
-	""" Remove accents and lower an unicode string """
-	return ''.join(x for x in unicodedata.normalize('NFKD', data) if x in string.ascii_letters).lower()	
-
-def triathlon_file_name(*args):
-	return remove_accents("_".join(args).lower().replace(' \'','_'))
-
-def normalize_col(df):
-	J = map(lambda x: x.total_seconds() if isinstance(x,timedelta) else float('nan'),list(df))
-	brn = float(J[0])
-	J = map(lambda x: 100.0*float(x)/brn,J)
-	return J	
 
 if __name__ == '__main__':
 	A=TRICLAIRControler()
