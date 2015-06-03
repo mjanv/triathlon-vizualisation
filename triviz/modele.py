@@ -75,7 +75,7 @@ class TRICLAIRModele(object):
 	        self._list_triathlons[year] = self.__load_list_triathlons(year)
 	    return self._list_triathlons[year]
 
-	@echo('Loading list of triathlons')
+	@echo('Loading list of triathlons for each year')
 	def get_list_all_triathlons(self):
 		return pd.concat([self.get_list_triathlons(year) for year in range(START_YEAR,datetime.today().year)])
 			  
@@ -86,6 +86,7 @@ class TRICLAIRModele(object):
 	        self._ranking_athletes[year] = self.__load_ranking_athletes(year)
 	    return self._ranking_athletes[year]
 
+	@echo('Loading ranking of athletes for each year') 
 	def get_all_ranking_athletes(self,year):
 	    return [(year,self.get_ranking_athletes(year)) for year in range(START_YEAR,datetime.today().year)]    
 
@@ -195,9 +196,10 @@ class TRICLAIRModele(object):
 		return pd.DataFrame(columns)	
 
 	def __get_soup_webpage(self,link,_cache={}):
-	    if link not in _cache:
-	        _cache[link] = bs.BeautifulSoup(urllib.urlopen(link).read())
-	    return _cache[link]
+		return bs.BeautifulSoup(urllib.urlopen(link).read())
+		if link not in _cache:
+			_cache[link] = bs.BeautifulSoup(urllib.urlopen(link).read())
+		return _cache[link]
 
 class TRICLAIRView(Tkinter.Tk):
     def __init__(self,parent,controler):
@@ -237,6 +239,7 @@ class TRICLAIRView(Tkinter.Tk):
 		for l,n,f in zip(list_triathlons['link'],list_triathlons['name'],list_triathlons['format']):
 			S = self.controler.modele.get_data_triathlon(l,n,f,2014)
 			print S['Scratch'].dropna()
+
 
 
 if __name__ == '__main__':

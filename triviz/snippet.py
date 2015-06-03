@@ -15,3 +15,11 @@ def write_list_triathlon_to_html():
 	f.write(A.to_html().encode('utf8'))
 	f.close()
 
+# Test draw data triathlon
+from utils import *
+from modele import *
+T = TRICLAIRModele()
+A=T.get_list_triathlons(2014)
+tri=A.loc[2]
+B=T.get_data_triathlon(tri.link,2014)
+plot_data_triathlon(B,tri)
