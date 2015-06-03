@@ -70,18 +70,19 @@ class TRICLAIRModele(object):
 		self.store_data = store_data
 
 	@echo('Loading list of triathlons')
-	def get_list_triathlons(self,year='All'):
+	def get_list_triathlons(self,year):
 	    if year not in self._list_triathlons:
 	        self._list_triathlons[year] = self.__load_list_triathlons(year)
 	    return self._list_triathlons[year]
 
+	@echo('Loading list of triathlons')
 	def get_list_all_triathlons(self):
 		return pd.concat([self.get_list_triathlons(year) 
 						   for year in range(START_YEAR,datetime.today().year)])
 			  
 
 	@echo('Loading ranking of athletes')    
-	def get_ranking_athletes(self,year=datetime.today().year-1):
+	def get_ranking_athletes(self,year):
 	    if year not in self._ranking_athletes:
 	        self._ranking_athletes[year] = self.__load_ranking_athletes(year)
 	    return self._ranking_athletes[year]
@@ -93,12 +94,11 @@ class TRICLAIRModele(object):
 	    return self._data_athletes[identifier]	
 
 	@echo('Loading data of triathlon')
-	def get_data_triathlon(self,link,name='',format='',year=datetime.today().year-1):
+	def get_data_triathlon(self,link,year):
 		if link not in self._data_triathlon:
-			self._data_triathlon[link] = self.__load_data_triathlon(link,name,format,year)
+			self._data_triathlon[link] = self.__load_data_triathlon(link,year)
 		return self._data_triathlon[link]	   	    	
 
-	@save_hdf('list_triathlons','year')
 	def __load_list_triathlons(self,year=datetime.today().year-1):
 		""" Extract the table in the pages http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php?saison=[year]
 			which resumes the date, name, format, and link of each triathlon of the specified year. Returns a Pandas DataFrame. """	
@@ -116,9 +116,7 @@ class TRICLAIRModele(object):
 
 		return pd.DataFrame(l,columns=['date','name','format','link'])
 
-	@echo('Loading ranking of athletes from %s' % BASE_URL)
-	@save_hdf('ranking_athletes','year')
-	def __load_ranking_athletes(self,year=datetime.today().year-1):
+	def __load_ranking_athletes(self,year):
 		""" Extract the main table in the pages http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php?saison=[year]
 			which resumes the rank, name, sex, club and number of points of each athlete. Returns a Pandas. """
 		if year not in range(START_YEAR,datetime.today().year):
@@ -136,7 +134,6 @@ class TRICLAIRModele(object):
 			columns.setdefault('points', []).append(int(col[3].text))
 		return pd.DataFrame(columns).replace(u'',u'NON LICENCIE')
 
-	@save_hdf('athlete','id')	
 	def load_data_athlete(self,id):
 		""" Extract the main table of an athlete's page knowing its id provided in the DataFrame computed by GetDataAthletes()
 			which resumes the date, name, format (S,M,..), number of points, coefficient and total of each race. Returns a Pandas DataFrame. """	
@@ -149,9 +146,8 @@ class TRICLAIRModele(object):
 				columns.setdefault(sec,[]).append(func(col.text)) # clean and append the data
 		return pd.DataFrame(columns)
 
-	@save_hdf('triathlon','year','name','format')	
-	def __load_data_triathlon(self,link,name='',format='',year=datetime.today().year-1):
- 			
+	def __load_data_triathlon(self,link,year):
+ 		""" TODO """	
 		table = self.__get_soup_webpage(BASE_URL + link).findAll('table')[-1]
 
 		entete = map(lambda x: x.text,table.find_all('tr')[0].find_all('th'))
