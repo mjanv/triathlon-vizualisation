@@ -3,7 +3,7 @@ Small snippets of code for manipulation of data
 """
 
 def write_list_triathlon_to_html():
-	""" Load the Dataframes for TODO """
+	""" Load the list of triathlons for all years and render it into a HTML table """
 	import modele
 	M = modele.TRICLAIRModele()
 	list_triathlons = M.get_list_all_triathlons()

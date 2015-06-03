@@ -77,8 +77,7 @@ class TRICLAIRModele(object):
 
 	@echo('Loading list of triathlons')
 	def get_list_all_triathlons(self):
-		return pd.concat([self.get_list_triathlons(year) 
-						   for year in range(START_YEAR,datetime.today().year)])
+		return pd.concat([self.get_list_triathlons(year) for year in range(START_YEAR,datetime.today().year)])
 			  
 
 	@echo('Loading ranking of athletes')    
@@ -86,6 +85,9 @@ class TRICLAIRModele(object):
 	    if year not in self._ranking_athletes:
 	        self._ranking_athletes[year] = self.__load_ranking_athletes(year)
 	    return self._ranking_athletes[year]
+
+	def get_all_ranking_athletes(self,year):
+	    return [(year,self.get_ranking_athletes(year)) for year in range(START_YEAR,datetime.today().year)]    
 
 	@echo('Loading data of athlete')
 	def get_data_athlete(self,identifier):
