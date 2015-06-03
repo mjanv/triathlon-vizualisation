@@ -1,0 +1,1220 @@
+<style>
+table {
+color: #333; 
+font-family: Helvetica, Arial, sans-serif;
+width: 100%;
+border-collapse:
+collapse; border-spacing: 0;
+
+}
+
+td, th { border: 1px solid #CCC; height: 25px; }
+
+th {
+background: #F3F3F3;
+font-weight: bold;
+text-align: center; 
+}
+
+td {
+background: #FAFAFA; 
+text-align: center; 
+}
+</style>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>name</th>
+      <th>format</th>
+      <th>link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0 </th>
+      <td>2010-09-26</td>
+      <td>      Triathlon des sources du lac</td>
+      <td>             Moyenne Distance 3/80/20</td>
+      <td>             /triathlon-doussard-resultats-864.htm</td>
+    </tr>
+    <tr>
+      <th>1 </th>
+      <td>2010-09-19</td>
+      <td>   Triathlon de Vaulx-Villeurbanne</td>
+      <td>                               Sprint</td>
+      <td>       /triathlon-miribel-jonage-resultats-853.htm</td>
+    </tr>
+    <tr>
+      <th>2 </th>
+      <td>2010-09-12</td>
+      <td>         Triathlon d'Aix-les-Bains</td>
+      <td>                         Super Sprint</td>
+      <td>        /triathlon-aix-les-bains-resultats-850.htm</td>
+    </tr>
+    <tr>
+      <th>3 </th>
+      <td>2010-09-12</td>
+      <td>         Triathlon d'Aix-les-Bains</td>
+      <td>                      Courte Distance</td>
+      <td>        /triathlon-aix-les-bains-resultats-846.htm</td>
+    </tr>
+    <tr>
+      <th>4 </th>
+      <td>2010-09-05</td>
+      <td>          Triathlon d'Aiguebelette</td>
+      <td>                               Sprint</td>
+      <td>         /triathlon-aiguebelette-resultats-843.htm</td>
+    </tr>
+    <tr>
+      <th>5 </th>
+      <td>2010-08-29</td>
+      <td>           Triathlon du Mont Blanc</td>
+      <td>                      Courte Distance</td>
+      <td>     /triathlon-mont-blanc-passy-resultats-837.htm</td>
+    </tr>
+    <tr>
+      <th>6 </th>
+      <td>2010-08-29</td>
+      <td>           Triathlon du Mont Blanc</td>
+      <td>                               Sprint</td>
+      <td>     /triathlon-mont-blanc-passy-resultats-838.htm</td>
+    </tr>
+    <tr>
+      <th>7 </th>
+      <td>2010-08-28</td>
+      <td>            Triathlon des collines</td>
+      <td>                               Sprint</td>
+      <td> /triathlon-collines-st-barthelemy-vals-resulta...</td>
+    </tr>
+    <tr>
+      <th>8 </th>
+      <td>2010-08-15</td>
+      <td>             Triathlon de Lamastre</td>
+      <td>                               Sprint</td>
+      <td>     /triathlon-vernoux-lamastre-resultats-831.htm</td>
+    </tr>
+    <tr>
+      <th>9 </th>
+      <td>2010-07-29</td>
+      <td>        Triathlon de l'Alpe d'Huez</td>
+      <td>                      Courte Distance</td>
+      <td>            /triathlon-alpe-huez-resultats-828.htm</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2010-07-28</td>
+      <td>        Triathlon de l'Alpe d'Huez</td>
+      <td>                      Longue Distance</td>
+      <td>            /triathlon-alpe-huez-resultats-827.htm</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2010-07-18</td>
+      <td>               Triathlon de Thonon</td>
+      <td>                      Courte Distance</td>
+      <td>               /triathlon-thonon-resultats-824.htm</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2010-07-11</td>
+      <td>    Triathlon nature du Valbonnais</td>
+      <td>                           Sprint VTT</td>
+      <td>           /triathlon-valbonnais-resultats-817.htm</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2010-07-04</td>
+      <td>                Triathlon d'Annecy</td>
+      <td>                      Courte Distance</td>
+      <td>               /triathlon-annecy-resultats-813.htm</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2010-06-20</td>
+      <td>       Triathlon du Lac des Sapins</td>
+      <td>                      Courte Distance</td>
+      <td>   /triathlon-lac-sapins-cublize-resultats-804.htm</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2010-06-20</td>
+      <td>       Triathlon du Lac des Sapins</td>
+      <td>                     Moyenne Distance</td>
+      <td>   /triathlon-lac-sapins-cublize-resultats-805.htm</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2010-06-13</td>
+      <td>     Triathlon de Roanne-Villerest</td>
+      <td>                      Courte Distance</td>
+      <td>     /triathlon-roanne-villerest-resultats-803.htm</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2010-06-13</td>
+      <td>     Triathlon de Roanne-Villerest</td>
+      <td>                               Sprint</td>
+      <td>     /triathlon-roanne-villerest-resultats-802.htm</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2010-06-06</td>
+      <td>              Triathlon de Rumilly</td>
+      <td>                      Courte Distance</td>
+      <td>              /triathlon-rumilly-resultats-786.htm</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2010-06-06</td>
+      <td>              Triathlon de Rumilly</td>
+      <td>                         Super Sprint</td>
+      <td>              /triathlon-rumilly-resultats-791.htm</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>2010-05-30</td>
+      <td>                Triathlon de Bourg</td>
+      <td>                               Sprint</td>
+      <td>                /triathlon-bourg-resultats-778.htm</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>2010-05-30</td>
+      <td>                Triathlon de Bourg</td>
+      <td>                      Courte Distance</td>
+      <td>                /triathlon-bourg-resultats-777.htm</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>2010-05-23</td>
+      <td>                    Mutriman Loire</td>
+      <td>                               Sprint</td>
+      <td>            /multriman-triathlon-resultats-774.htm</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>2010-05-09</td>
+      <td>              Triathlon de Valence</td>
+      <td>                               Sprint</td>
+      <td>              /triathlon-valence-resultats-760.htm</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>2010-05-02</td>
+      <td>        Triathlon de Romans-Roybon</td>
+      <td>                               Sprint</td>
+      <td>        /triathlon-romans-roybon-resultats-757.htm</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>2010-04-25</td>
+      <td>                            Trimax</td>
+      <td> Triathlon VTT Sprint en deux manches</td>
+      <td>               /trimax-st-priest-resultats-754.htm</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>2010-04-11</td>
+      <td> Triathlon des Vallons du Lyonnais</td>
+      <td>                         Super Sprint</td>
+      <td>     /triathlon-vallons-lyonnais-resultats-744.htm</td>
+    </tr>
+    <tr>
+      <th>0 </th>
+      <td>2011-09-18</td>
+      <td>       Triathlon de Vaulx-en-Velin</td>
+      <td>                               Sprint</td>
+      <td>               /triathlon-vaulx-resultats-1104.htm</td>
+    </tr>
+    <tr>
+      <th>1 </th>
+      <td>2011-09-11</td>
+      <td>         Triathlon d'Aix-les-Bains</td>
+      <td>                      Courte Distance</td>
+      <td>       /triathlon-aix-les-bains-resultats-1097.htm</td>
+    </tr>
+    <tr>
+      <th>2 </th>
+      <td>2011-09-11</td>
+      <td>         Triathlon d'Aix-les-Bains</td>
+      <td>                         Super-Sprint</td>
+      <td>       /triathlon-aix-les-bains-resultats-1096.htm</td>
+    </tr>
+    <tr>
+      <th>3 </th>
+      <td>2011-09-04</td>
+      <td>   Triathlon du Lac d'Aiguebelette</td>
+      <td>                               Sprint</td>
+      <td>    /triathlon-lac-aiguebelette-resultats-1089.htm</td>
+    </tr>
+    <tr>
+      <th>4 </th>
+      <td>2011-08-28</td>
+      <td>   Triathlon du Mont-Blanc - Passy</td>
+      <td>                               Sprint</td>
+      <td>    /triathlon-mont-blanc-passy-resultats-1082.htm</td>
+    </tr>
+    <tr>
+      <th>5 </th>
+      <td>2011-08-28</td>
+      <td>   Triathlon du Mont-Blanc - Passy</td>
+      <td>                      Courte Distance</td>
+      <td>    /triathlon-mont-blanc-passy-resultats-1081.htm</td>
+    </tr>
+    <tr>
+      <th>6 </th>
+      <td>2011-08-15</td>
+      <td>             Triathlon de Lamastre</td>
+      <td>                               Sprint</td>
+      <td>            /triathlon-lamastre-resultats-1076.htm</td>
+    </tr>
+    <tr>
+      <th>7 </th>
+      <td>2011-07-30</td>
+      <td>            Triathlon des collines</td>
+      <td>                               Sprint</td>
+      <td>        /triathlon-des-collines-resultats-1074.htm</td>
+    </tr>
+    <tr>
+      <th>8 </th>
+      <td>2011-07-28</td>
+      <td>        Triathlon de l'Alpe d'Huez</td>
+      <td>                      Courte Distance</td>
+      <td>           /triathlon-alpe-huez-resultats-1073.htm</td>
+    </tr>
+    <tr>
+      <th>9 </th>
+      <td>2011-07-27</td>
+      <td>        Triathlon de l'Alpe d'Huez</td>
+      <td>                      Longue Distance</td>
+      <td>           /triathlon-alpe-huez-resultats-1072.htm</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2011-07-17</td>
+      <td>               Triathlon de Thonon</td>
+      <td>                      Courte Distance</td>
+      <td>              /triathlon-thonon-resultats-1071.htm</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2011-07-10</td>
+      <td>    Triathlon nature du Valbonnais</td>
+      <td>                               Sprint</td>
+      <td>   /triathlon-nature-valbonnais-resultats-1063.htm</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2011-07-03</td>
+      <td>                Triathlon d'Annecy</td>
+      <td>                      Courte Distance</td>
+      <td>              /triathlon-annecy-resultats-1058.htm</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2011-06-26</td>
+      <td>           Triathlon de Montélimar</td>
+      <td>                      Courte Distance</td>
+      <td>          /triathlon-montelimar-resultats-1055.htm</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2011-06-19</td>
+      <td>       Triathlon du Lac des Sapins</td>
+      <td>                     Moyenne Distance</td>
+      <td>  /triathlon-lac-sapins-cublize-resultats-1051.htm</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2011-06-19</td>
+      <td>       Triathlon du Lac des Sapins</td>
+      <td>                      Courte Distance</td>
+      <td>  /triathlon-lac-sapins-cublize-resultats-1052.htm</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2011-06-12</td>
+      <td>         Triathlon de l'île Barlet</td>
+      <td>                      Courte Distance</td>
+      <td>          /triathlon-ile-barlet-resultats-1039.htm</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2011-06-05</td>
+      <td>             Triathlon de Doussard</td>
+      <td>                         Half-Ironman</td>
+      <td>                 /half-doussard-resultats-1034.htm</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2011-05-29</td>
+      <td>                Triathlon de Bourg</td>
+      <td>                               Sprint</td>
+      <td>       /triathlon-bourg-bouvent-resultats-1029.htm</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2011-05-29</td>
+      <td>      Triathlon de Bourg-en-Bresse</td>
+      <td>                      Courte Distance</td>
+      <td>       /triathlon-bourg-bouvent-resultats-1028.htm</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>2011-05-22</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                               Sprint</td>
+      <td>           /triathlon-tricastin-resultats-1023.htm</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>2011-05-22</td>
+      <td>              Triathlon de Rumilly</td>
+      <td>                      Courte Distance</td>
+      <td>             /triathlon-rumilly-resultats-1025.htm</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>2011-05-22</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                      Courte Distance</td>
+      <td>           /triathlon-tricastin-resultats-1022.htm</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>2011-05-22</td>
+      <td>              Triathlon de Rumilly</td>
+      <td>                         Super Sprint</td>
+      <td>             /triathlon-rumilly-resultats-1026.htm</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>2011-05-08</td>
+      <td>              Triathlon de Valence</td>
+      <td>                               Sprint</td>
+      <td>             /triathlon-valence-resultats-1011.htm</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>2011-05-01</td>
+      <td>               Triathlon de Romans</td>
+      <td>                               Sprint</td>
+      <td>              /triathlon-romans-resultats-1002.htm</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>2011-05-01</td>
+      <td>               Triathlon de Romans</td>
+      <td>                         Super-Sprint</td>
+      <td>              /triathlon-romans-resultats-1003.htm</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>2011-04-10</td>
+      <td> Triathlon des Vallons du Lyonnais</td>
+      <td>                         Super Sprint</td>
+      <td> /triathlon-vallons-lyonnais-vaugneray-resultat...</td>
+    </tr>
+    <tr>
+      <th>0 </th>
+      <td>2012-09-30</td>
+      <td> Triathlon des Vallons du Lyonnais</td>
+      <td>                         Super-Sprint</td>
+      <td>    /triathlon-vallons-lyonnais-resultats-1379.htm</td>
+    </tr>
+    <tr>
+      <th>1 </th>
+      <td>2012-09-16</td>
+      <td>       Triathlon de Vaulx-en-Velin</td>
+      <td>                               Sprint</td>
+      <td>      /triathlon-vaulx-en-velin-resultats-1363.htm</td>
+    </tr>
+    <tr>
+      <th>2 </th>
+      <td>2012-09-09</td>
+      <td>         Triathlon d'Aix-les-Bains</td>
+      <td>                      Courte Distance</td>
+      <td>       /triathlon-aix-les-bains-resultats-1357.htm</td>
+    </tr>
+    <tr>
+      <th>3 </th>
+      <td>2012-09-02</td>
+      <td>          Triathlon d'Aiguebelette</td>
+      <td>                               Sprint</td>
+      <td>        /triathlon-aiguebelette-resultats-1344.htm</td>
+    </tr>
+    <tr>
+      <th>4 </th>
+      <td>2012-08-26</td>
+      <td>           Triathlon du Mont Blanc</td>
+      <td>                               Sprint</td>
+      <td>    /triathlon-mont-blanc-passy-resultats-1336.htm</td>
+    </tr>
+    <tr>
+      <th>5 </th>
+      <td>2012-08-26</td>
+      <td>           Triathlon du Mont Blanc</td>
+      <td>                      Courte Distance</td>
+      <td>    /triathlon-mont-blanc-passy-resultats-1337.htm</td>
+    </tr>
+    <tr>
+      <th>6 </th>
+      <td>2012-08-25</td>
+      <td> Triathlon des Gorges de l'Ardèche</td>
+      <td>                      Courte Distance</td>
+      <td>      /triathlon-gorges-ardeche-resultats-1335.htm</td>
+    </tr>
+    <tr>
+      <th>7 </th>
+      <td>2012-08-15</td>
+      <td>             Triathlon de Lamastre</td>
+      <td>                               Sprint</td>
+      <td>            /triathlon-lamastre-resultats-1332.htm</td>
+    </tr>
+    <tr>
+      <th>8 </th>
+      <td>2012-07-26</td>
+      <td>        Triathlon de l'Alpe d'Huez</td>
+      <td>                      Courte Distance</td>
+      <td>           /triathlon-alpe-huez-resultats-1319.htm</td>
+    </tr>
+    <tr>
+      <th>9 </th>
+      <td>2012-07-25</td>
+      <td>        Triathlon de l'Alpe d'Huez</td>
+      <td>                      Longue Distance</td>
+      <td>           /triathlon-alpe-huez-resultats-1318.htm</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2012-07-22</td>
+      <td>            Triathlon des collines</td>
+      <td>                               Sprint</td>
+      <td>            /triathlon-collines-resultats-1314.htm</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2012-07-15</td>
+      <td>               Triathlon de Thonon</td>
+      <td>                      Courte Distance</td>
+      <td>              /triathlon-thonon-resultats-1307.htm</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2012-07-08</td>
+      <td>    Triathlon nature du Valbonnais</td>
+      <td>                         Sprint - VTT</td>
+      <td>          /triathlon-valbonnais-resultats-1302.htm</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2012-07-01</td>
+      <td>                Triathlon d'Annecy</td>
+      <td>                      Courte Distance</td>
+      <td>              /triathlon-annecy-resultats-1297.htm</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2012-06-17</td>
+      <td>       Triathlon du lac des sapins</td>
+      <td>                     Moyenne Distance</td>
+      <td>          /triathlon-lac-sapins-resultats-1290.htm</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2012-06-17</td>
+      <td>       Triathlon du lac des sapins</td>
+      <td>                      Courte Distance</td>
+      <td>          /triathlon-lac-sapins-resultats-1291.htm</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2012-06-10</td>
+      <td>               Triathlon de Roanne</td>
+      <td>                               Sprint</td>
+      <td>    /triathlon-roanne-villerest-resultats-1283.htm</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2012-06-10</td>
+      <td>               Triathlon de Roanne</td>
+      <td>                      Courte Distance</td>
+      <td>    /triathlon-roanne-villerest-resultats-1281.htm</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2012-06-10</td>
+      <td>         Triathlon de l'île Barlet</td>
+      <td>                      Courte Distance</td>
+      <td>          /triathlon-ile-barlet-resultats-1278.htm</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2012-06-03</td>
+      <td>                Half Iron Doussard</td>
+      <td>                         Half-Ironman</td>
+      <td>            /half-iron-doussard-resultats-1274.htm</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>2012-05-27</td>
+      <td>      Triathlon de Bourg-en-Bresse</td>
+      <td>                               Sprint</td>
+      <td>     /triathlon-bourg-en-bresse-resultats-1269.htm</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>2012-05-27</td>
+      <td>      Triathlon de Bourg-en-Bresse</td>
+      <td>                      Courte Distance</td>
+      <td>     /triathlon-bourg-en-bresse-resultats-1272.htm</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>2012-05-20</td>
+      <td>              Triathlon de Rumilly</td>
+      <td>                      Courte Distance</td>
+      <td>             /triathlon-rumilly-resultats-1264.htm</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>2012-05-20</td>
+      <td>              Triathlon de Rumilly</td>
+      <td>                         Super-Sprint</td>
+      <td>             /triathlon-rumilly-resultats-1265.htm</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>2012-05-08</td>
+      <td>              Triathlon de Valence</td>
+      <td>                               Sprint</td>
+      <td>             /triathlon-valence-resultats-1252.htm</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>2012-04-29</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                      Courte Distance</td>
+      <td>           /triathlon-tricastin-resultats-1248.htm</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>2012-04-28</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                         Super-Sprint</td>
+      <td>           /triathlon-tricastin-resultats-1251.htm</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>2012-04-28</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                            Sprint D2</td>
+      <td>           /triathlon-tricastin-resultats-1250.htm</td>
+    </tr>
+    <tr>
+      <th>0 </th>
+      <td>2013-09-29</td>
+      <td>         Triathlon de l'Île Barlet</td>
+      <td>                                    M</td>
+      <td>          /triathlon-ile-barlet-resultats-1600.htm</td>
+    </tr>
+    <tr>
+      <th>1 </th>
+      <td>2013-09-15</td>
+      <td>       Triathlon de Vaulx-en-Velin</td>
+      <td>                               XS VTT</td>
+      <td>               /triathlon-vaulx-resultats-1587.htm</td>
+    </tr>
+    <tr>
+      <th>2 </th>
+      <td>2013-09-15</td>
+      <td>       Triathlon de Vaulx-en-Velin</td>
+      <td>                                    S</td>
+      <td>               /triathlon-vaulx-resultats-1586.htm</td>
+    </tr>
+    <tr>
+      <th>3 </th>
+      <td>2013-09-08</td>
+      <td>         Triathlon d'Aix-les-Bains</td>
+      <td>                                   XS</td>
+      <td>                 /triathlon-aix-resultats-1580.htm</td>
+    </tr>
+    <tr>
+      <th>4 </th>
+      <td>2013-09-08</td>
+      <td>         Triathlon d'Aix-les-Bains</td>
+      <td>                                    M</td>
+      <td>                 /triathlon-aix-resultats-1581.htm</td>
+    </tr>
+    <tr>
+      <th>5 </th>
+      <td>2013-09-01</td>
+      <td>          Triathlon d'Aiguebelette</td>
+      <td>                                    S</td>
+      <td>        /triathlon-aiguebelette-resultats-1572.htm</td>
+    </tr>
+    <tr>
+      <th>6 </th>
+      <td>2013-09-01</td>
+      <td>          Triathlon d'Aiguebelette</td>
+      <td>                                   XS</td>
+      <td>        /triathlon-aiguebelette-resultats-1573.htm</td>
+    </tr>
+    <tr>
+      <th>7 </th>
+      <td>2013-08-25</td>
+      <td>           Triathlon du Mont-Blanc</td>
+      <td>                                    M</td>
+      <td>    /triathlon-mont-blanc-passy-resultats-1570.htm</td>
+    </tr>
+    <tr>
+      <th>8 </th>
+      <td>2013-08-25</td>
+      <td>           Triathlon du Mont-Blanc</td>
+      <td>                                    S</td>
+      <td>    /triathlon-mont-blanc-passy-resultats-1569.htm</td>
+    </tr>
+    <tr>
+      <th>9 </th>
+      <td>2013-08-24</td>
+      <td> Triathlon des Gorges de l'Ardèche</td>
+      <td>                                    M</td>
+      <td>      /triathlon-gorges-ardeche-resultats-1567.htm</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2013-08-23</td>
+      <td> Triathlon des Gorges de l'Ardèche</td>
+      <td>                                    S</td>
+      <td>      /triathlon-gorges-ardeche-resultats-1566.htm</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2013-08-15</td>
+      <td>             Triathlon de Lamastre</td>
+      <td>                                    S</td>
+      <td>            /triathlon-lamastre-resultats-1562.htm</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2013-07-25</td>
+      <td>        Triathlon de l'Alpe d'Huez</td>
+      <td>                                    M</td>
+      <td>           /triathlon-alpe-huez-resultats-1555.htm</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2013-07-24</td>
+      <td>        Triathlon de l'Alpe d'Huez</td>
+      <td>                                    L</td>
+      <td>           /triathlon-alpe-huez-resultats-1554.htm</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2013-07-21</td>
+      <td>            Triathlon des collines</td>
+      <td>                                   XS</td>
+      <td>        /triathlon-des-collines-resultats-1552.htm</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2013-07-21</td>
+      <td>            Triathlon des collines</td>
+      <td>                                    S</td>
+      <td>        /triathlon-des-collines-resultats-1551.htm</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2013-07-20</td>
+      <td>           Triathlon de Courchevel</td>
+      <td>                                    S</td>
+      <td>          /triathlon-courchevel-resultats-1550.htm</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2013-07-14</td>
+      <td>               Triathlon de Thonon</td>
+      <td>                                    M</td>
+      <td>              /traithlon-thonon-resultats-1548.htm</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2013-07-14</td>
+      <td>               Triathlon de Thonon</td>
+      <td>                                   XS</td>
+      <td>              /traithlon-thonon-resultats-1549.htm</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2013-07-07</td>
+      <td>    Triathlon Nature du Valbonnais</td>
+      <td>                                    M</td>
+      <td>          /triathlon-valbonnais-resultats-1543.htm</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>2013-07-07</td>
+      <td>    Triathlon Nature du Valbonnais</td>
+      <td>                                   XS</td>
+      <td>          /triathlon-valbonnais-resultats-1544.htm</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>2013-07-07</td>
+      <td>      Triathlon du Lac de Machilly</td>
+      <td>                   S - CLM individuel</td>
+      <td>        /triathlon-lac-machilly-resultats-1541.htm</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>2013-07-07</td>
+      <td>      Triathlon du Lac de Machilly</td>
+      <td>                                   XS</td>
+      <td>        /triathlon-lac-machilly-resultats-1542.htm</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>2013-06-30</td>
+      <td>         Triathlon du Lac d'Annecy</td>
+      <td>                                    M</td>
+      <td>              /triathlon-annecy-resultats-1536.htm</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>2013-06-16</td>
+      <td>       Triathlon du Lac des Sapins</td>
+      <td>                                    M</td>
+      <td> /triathlon-lac-des-sapins-cublize-resultats-15...</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>2013-06-16</td>
+      <td>       Triathlon du Lac des Sapins</td>
+      <td>                                    L</td>
+      <td> /triathlon-lac-des-sapins-cublize-resultats-15...</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>2013-06-09</td>
+      <td>               Triathlon de Roanne</td>
+      <td>                                    S</td>
+      <td>              /triathlon-roanne-resultats-1526.htm</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>2013-06-09</td>
+      <td>               Triathlon de Roanne</td>
+      <td>                                    M</td>
+      <td>              /triathlon-roanne-resultats-1525.htm</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>2013-06-02</td>
+      <td>                Half Iron Doussard</td>
+      <td>                     L - Half Ironman</td>
+      <td>            /half-iron-doussard-resultats-1520.htm</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>2013-05-26</td>
+      <td>      Triathlon de Bourg-en-Bresse</td>
+      <td>                                    S</td>
+      <td>     /triathlon-bourg-en-bresse-resultats-1516.htm</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>2013-05-26</td>
+      <td>      Triathlon de Bourg-en-Bresse</td>
+      <td>                                    M</td>
+      <td>     /triathlon-bourg-en-bresse-resultats-1517.htm</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>2013-05-19</td>
+      <td>              Triathlon de Rumilly</td>
+      <td>                                    M</td>
+      <td>             /triathlon-rumilly-resultats-1509.htm</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>2013-05-19</td>
+      <td>               Half-Iron du Semnoz</td>
+      <td>                                    L</td>
+      <td>             /triathlon-rumilly-resultats-1511.htm</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>2013-05-19</td>
+      <td>              Triathlon de Rumilly</td>
+      <td>                                   XS</td>
+      <td>             /triathlon-rumilly-resultats-1510.htm</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>2013-05-12</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                                    M</td>
+      <td> /triathlon-tricastin-pierrelatte-resultats-150...</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>2013-05-12</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                            XS - Open</td>
+      <td> /triathlon-tricastin-pierrelatte-resultats-150...</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>2013-05-11</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                    XS - benjamin(e)s</td>
+      <td> /triathlon-tricastin-pierrelatte-resultats-149...</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>2013-05-11</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                  XS - minimes filles</td>
+      <td> /triathlon-tricastin-pierrelatte-resultats-149...</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>2013-05-11</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>       S - Cadettes et Juniors filles</td>
+      <td> /triathlon-tricastin-pierrelatte-resultats-150...</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>2013-05-11</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                 XS - minimes garçons</td>
+      <td> /triathlon-tricastin-pierrelatte-resultats-149...</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>2013-05-11</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>            S - Cadets-Juniors Hommes</td>
+      <td> /triathlon-tricastin-pierrelatte-resultats-150...</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>2013-05-09</td>
+      <td>             Triathlon du Dauphiné</td>
+      <td>                                   XS</td>
+      <td>   /triathlon-dauphine-st-donat-resultats-1496.htm</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>2013-05-09</td>
+      <td>             Triathlon du Dauphiné</td>
+      <td>                                    S</td>
+      <td>   /triathlon-dauphine-st-donat-resultats-1495.htm</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>2013-05-05</td>
+      <td>              Triathlon de Valence</td>
+      <td>                                   XS</td>
+      <td>             /triathlon-valence-resultats-1492.htm</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>2013-05-05</td>
+      <td>              Triathlon de Valence</td>
+      <td>                                    S</td>
+      <td>             /triathlon-valence-resultats-1491.htm</td>
+    </tr>
+    <tr>
+      <th>0 </th>
+      <td>2014-09-21</td>
+      <td>       Triathlon de Vaulx-en-Velin</td>
+      <td>                                    S</td>
+      <td>      /triathlon-vaulx-en-velin-resultats-1833.htm</td>
+    </tr>
+    <tr>
+      <th>1 </th>
+      <td>2014-09-21</td>
+      <td>       Triathlon de Vaulx-en-Velin</td>
+      <td>                                   XS</td>
+      <td>      /triathlon-vaulx-en-velin-resultats-1834.htm</td>
+    </tr>
+    <tr>
+      <th>2 </th>
+      <td>2014-09-14</td>
+      <td>         Triathlon d'Aix-les-Bains</td>
+      <td>                                   XS</td>
+      <td>       /triathlon-aix-les-bains-resultats-1831.htm</td>
+    </tr>
+    <tr>
+      <th>3 </th>
+      <td>2014-09-14</td>
+      <td>         Triathlon d'Aix-les-Bains</td>
+      <td>                                    M</td>
+      <td>       /triathlon-aix-les-bains-resultats-1830.htm</td>
+    </tr>
+    <tr>
+      <th>4 </th>
+      <td>2014-09-07</td>
+      <td>  Triathlon de St Pierre d'Albigny</td>
+      <td>                                    S</td>
+      <td> /triathlon-st-pierre-d-albigny-resultats-1824.htm</td>
+    </tr>
+    <tr>
+      <th>5 </th>
+      <td>2014-08-24</td>
+      <td>           Triathlon du Mont Blanc</td>
+      <td>                                    M</td>
+      <td>          /triathlon-mont-blanc-resultats-1819.htm</td>
+    </tr>
+    <tr>
+      <th>6 </th>
+      <td>2014-08-24</td>
+      <td>           Triathlon du Mont Blanc</td>
+      <td>                                    S</td>
+      <td>          /triathlon-mont-blanc-resultats-1820.htm</td>
+    </tr>
+    <tr>
+      <th>7 </th>
+      <td>2014-08-23</td>
+      <td> Triathlon des Gorges de l'Ardèche</td>
+      <td>                                    M</td>
+      <td>      /triathlon-gorges-ardeche-resultats-1815.htm</td>
+    </tr>
+    <tr>
+      <th>8 </th>
+      <td>2014-08-22</td>
+      <td> Triathlon des Gorges de l'Ardèche</td>
+      <td>                                   XS</td>
+      <td>      /triathlon-gorges-ardeche-resultats-1813.htm</td>
+    </tr>
+    <tr>
+      <th>9 </th>
+      <td>2014-08-22</td>
+      <td> Triathlon des Gorges de l'Ardèche</td>
+      <td>                                    S</td>
+      <td>      /triathlon-gorges-ardeche-resultats-1814.htm</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2014-08-15</td>
+      <td>             Triathlon de Lamastre</td>
+      <td>                                    S</td>
+      <td>            /triathlon-lamastre-resultats-1812.htm</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2014-07-31</td>
+      <td>        Triathlon de l'Alpe d'Huez</td>
+      <td>                                    M</td>
+      <td>           /triathlon-alpe-huez-resultats-1803.htm</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2014-07-30</td>
+      <td>        Triathlon de l'Alpe d'Huez</td>
+      <td>                                   XL</td>
+      <td>           /triathlon-alpe-huez-resultats-1802.htm</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2014-07-20</td>
+      <td>            Triathlon des collines</td>
+      <td>                                   XS</td>
+      <td>        /triathlon-des-collines-resultats-1792.htm</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2014-07-20</td>
+      <td>            Triathlon des collines</td>
+      <td>                                    S</td>
+      <td>        /triathlon-des-collines-resultats-1791.htm</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2014-07-16</td>
+      <td>             Fitdays Lac du Sautet</td>
+      <td>                                   XS</td>
+      <td>            /fitdays-lac-sautet-resultats-1799.htm</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2014-07-16</td>
+      <td>             Fitdays Lac du Sautet</td>
+      <td>                                   XS</td>
+      <td>            /fitdays-lac-sautet-resultats-1800.htm</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2014-07-13</td>
+      <td>               Triathlon de Thonon</td>
+      <td>                                   XS</td>
+      <td>              /triathlon-thonon-resultats-1786.htm</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2014-07-13</td>
+      <td>               Triathlon de Thonon</td>
+      <td>                                    M</td>
+      <td>              /triathlon-thonon-resultats-1785.htm</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2014-07-06</td>
+      <td>      Triathlon du Lac de Machilly</td>
+      <td>                   S - CLM individuel</td>
+      <td>        /triathlon-lac-machilly-resultats-1777.htm</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>2014-07-06</td>
+      <td>      Triathlon du Lac de Machilly</td>
+      <td>                                   XS</td>
+      <td>        /triathlon-lac-machilly-resultats-1778.htm</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>2014-07-06</td>
+      <td>           Triathlon du Valbonnais</td>
+      <td>                              M - VTT</td>
+      <td>          /triathlon-valbonnais-resultats-1779.htm</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>2014-07-06</td>
+      <td>           Triathlon du Valbonnais</td>
+      <td>                             XS - VTT</td>
+      <td>          /triathlon-valbonnais-resultats-1780.htm</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>2014-06-29</td>
+      <td>                Triathlon d'Annecy</td>
+      <td>                                    M</td>
+      <td>              /triathlon-annecy-resultats-1775.htm</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>2014-06-15</td>
+      <td>       Triathlon du Lac des Sapins</td>
+      <td>                                    M</td>
+      <td>  /triathlon-lac-sapins-cublize-resultats-1745.htm</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>2014-06-15</td>
+      <td>       Triathlon du Lac des Sapins</td>
+      <td>                                    L</td>
+      <td>  /triathlon-lac-sapins-cublize-resultats-1744.htm</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>2014-06-08</td>
+      <td>               Triathlon de Roanne</td>
+      <td>                                    S</td>
+      <td>              /triathlon-roanne-resultats-1731.htm</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>2014-06-08</td>
+      <td>               Triathlon de Roanne</td>
+      <td>                                    M</td>
+      <td>              /triathlon-roanne-resultats-1725.htm</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>2014-06-08</td>
+      <td>                     Half Doussard</td>
+      <td>                         Half-Ironman</td>
+      <td>                 /half-doussard-resultats-1727.htm</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>2014-06-08</td>
+      <td>              Triathlon de Valence</td>
+      <td>                                   XS</td>
+      <td>             /triathlon-valence-resultats-1724.htm</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>2014-06-01</td>
+      <td>         Triathlon de l'île Barlet</td>
+      <td>                                    M</td>
+      <td>              /triathlon-barlet-resultats-1721.htm</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>2014-05-25</td>
+      <td>      Triathlon de Bourg-en-Bresse</td>
+      <td>                                    S</td>
+      <td>               /triathlon-bourg-resultats-1715.htm</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>2014-05-25</td>
+      <td>      Triathlon de Bourg-en-Bresse</td>
+      <td>                                    M</td>
+      <td>               /triathlon-bourg-resultats-1714.htm</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>2014-05-18</td>
+      <td>              Triathlon de Rumilly</td>
+      <td>                                    M</td>
+      <td>                              /-resultats-1709.htm</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>2014-05-18</td>
+      <td>               Half Iron du Semnoz</td>
+      <td>                                    L</td>
+      <td>                /semnoz-rumilly-resultats-1716.htm</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>2014-05-18</td>
+      <td>              Triathlon de Rumilly</td>
+      <td>                                   XS</td>
+      <td>                              /-resultats-1710.htm</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>2014-05-11</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                                    M</td>
+      <td>           /triathlon-tricastin-resultats-1707.htm</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>2014-05-10</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>                   S - cadets juniors</td>
+      <td>           /triathlon-tricastin-resultats-1705.htm</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>2014-05-10</td>
+      <td>            Triathlon du Tricastin</td>
+      <td>               XS - benjamins minimes</td>
+      <td>           /triathlon-tricastin-resultats-1706.htm</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>2014-05-04</td>
+      <td>             Triathlon du Dauphiné</td>
+      <td>                                   XS</td>
+      <td>            /triathlon-dauphine-resultats-1702.htm</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>2014-05-04</td>
+      <td>             Triathlon du Dauphiné</td>
+      <td>                                    S</td>
+      <td>            /triathlon-dauphine-resultats-1701.htm</td>
+    </tr>
+  </tbody>
+</table>

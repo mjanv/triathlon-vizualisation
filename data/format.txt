@@ -1,0 +1,30 @@
+XS VTT,XS
+Moyenne Distance,L
+Super Sprint,S
+XS - VTT,XS
+Courte Distance,M
+Sprint D2,S
+S - Cadettes et Juniors filles,S
+S - cadets juniors,S
+XS - benjamin(e)s,XS
+Sprint VTT,S
+XS - minimes filles,XS
+XL,XL
+M - VTT,M
+Longue Distance,L
+L - Half Ironman,L
+Super-Sprint,S
+XS - benjamins minimes,XS
+Moyenne Distance 3/80/20,L
+Half-Ironman,L
+Triathlon VTT Sprint en deux manches,S
+M,M
+L,L
+S,S
+XS - Open,XS
+XS,XS
+S - Cadets-Juniors Hommes,S
+XS - minimes garçons,XS
+Sprint - VTT,S
+Sprint,S
+S - CLM individuel,S

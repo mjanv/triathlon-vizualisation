@@ -4,6 +4,7 @@
 from __future__ import unicode_literals
 
 import pandas as pd
+from functools import wraps
 import inspect
 import os
 
@@ -12,18 +13,24 @@ def echo(msg=''):
 	    def wrapped(*v, **k):
 	        if v[0].verbose:
 	        	print ":: Calling %s: %s" % (fn.__name__,msg)
-	        	if v[1:] is not ():
-	        		print " - Arguments: %s" % " , ".join(map(str,v[1:]))
-	        		print v,k
-	        		print inspect.getargspec(fn)[0]
 	        return fn(*v, **k) 
 	    return wrapped
 	return echo_inside
 
+def memo(fn):
+    cache = {}
+    @wraps(fn)
+    def wrap(*args):
+        if args not in cache:
+            cache[args] = fn(*args)
+        return cache[args]
+    return wrap	
+
 def save_hdf(name,*args):
 	def save_inside(fn):
 		def wrapped(*v,**k):
-			file_name = "".join((v[0].store_data,name,)+tuple([str(v[inspect.getargspec(fn)[0].index(arg)]) for arg in args]))
+			file_name = "".join((v[0].store_data,name,)
+								 +tuple([str(v[inspect.getargspec(fn)[0].index(arg)]) for arg in args]))
 			if os.path.isfile(file_name):
 				return pd.read_hdf(file_name,'df')
 			else:	
