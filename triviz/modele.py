@@ -23,7 +23,7 @@ import inspect
 
 from collections import Counter, OrderedDict
 
-from src.dec import echo,save_hdf
+from dec import echo,save_hdf
 
 BASE_URL = u'http://www.triclair.com'
 SEASON_URL = u'/resultats/challenge-triathlon-rhone-alpes.php?saison='
