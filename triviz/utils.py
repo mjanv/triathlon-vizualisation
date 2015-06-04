@@ -77,7 +77,7 @@ def plot_data_triathlon(triathlon_info,rankings,head=None):
 	for ind, titles in enumerate(combinations(['Scratch','Natation','Velo','Cap'],2)):
 		datas = [normalize_col(rankings[title]) for title in titles]
 		limit_low = int(min(map(min,datas))); limit_high = int(max(map(max,datas)))
-		axes[ind].plot(datas[0],datas[1],'+',color=cl(ind))
+		axes[ind].plot(datas[0],datas[1],'o',color=cl(ind),markersize=10)
 		axes[ind].plot(xrange(limit_low,limit_high),xrange(limit_low,limit_high),'--k',linewidth=1)
 		cor = np.corrcoef(zip(*[(a,b) for a,b in zip(datas[0],datas[1]) if not (math.isnan(a) or math.isnan(b))]))[0][1]
 		axes[ind].set_title('Correlation: ' + str(cor),fontsize=10)
