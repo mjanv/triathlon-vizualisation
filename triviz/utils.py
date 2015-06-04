@@ -10,6 +10,11 @@ import unicodedata, string
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
+import math
+
+from itertools import combinations
+from scipy.stats.stats import pearsonr
+import matplotlib.cm as cm
 
 def convertDate(s):
 	""" Convert a string under the format of day-month-year into a datetime object. 
@@ -30,10 +35,9 @@ def triathlon_file_name(*args):
 	return remove_accents("_".join(args).lower().replace(' \'','_'))
 
 def normalize_col(df):
-	J = map(lambda x: x.total_seconds() if isinstance(x,timedelta) else float('nan'),list(df))
-	brn = float(J[0])
-	J = map(lambda x: 100.0*float(x)/brn,J)
-	return J	
+	""" Normalize a column of timedelta to the percentage (>100%) of the first element """
+	J = map(lambda x: float(x.total_seconds()) if isinstance(x,timedelta) else float('nan'),list(df))
+	return map(lambda x: 100.0*x/J[0],J)
 
 def get_mask(self,format=None,name=None):
 	all_true = [True]*len(self.list_triathlons['format'])
@@ -57,44 +61,54 @@ def plot_data_all_triathlons(self,mask):
 	plt.show()
 
 
-def plot_data_triathlon(L,tri):
-	fig, axes = plt.subplots(ncols=2, nrows=2)
-	ax1, ax2, ax3, ax4 = axes.ravel()
+def plot_data_triathlon(triathlon_info,rankings,head=None):
+	""" Plot interesting data about triathlon """
+
+	nb_athletes = len(rankings)
+	if head is not None:
+		rankings = rankings.head(head)
+
+	# Plot Correlation beetween Variable
+	fig, axes = plt.subplots(ncols=3, nrows=2); axes = axes.ravel()
 	fig.tight_layout(pad=2.0, w_pad=2.0, h_pad=2.0)
-	fig.suptitle(" ".join((tri['name'],str(tri['date'].year))),fontsize=12)
+	fig.suptitle(" ".join((triathlon_info['name'],str(triathlon_info['date'].year))),fontsize=12)
+	cl  = cm.get_cmap('gist_rainbow',6)
 
-	LN = normalize_col(L['Natation']); LNm = float(np.median(LN))
-	LV = normalize_col(L['Velo']); LVm = float(np.median(LV)) 
-	LC = normalize_col(L['Cap']); LCm = float(np.median(LC)) 
-	LS = normalize_col(L['Scratch']);  LSm = float(np.median(LS)) 
+	for ind, titles in enumerate(combinations(['Scratch','Natation','Velo','Cap'],2)):
+		datas = [normalize_col(rankings[title]) for title in titles]
+		limit_low = int(min(map(min,datas))); limit_high = int(max(map(max,datas)))
+		axes[ind].plot(datas[0],datas[1],'+',color=cl(ind))
+		axes[ind].plot(xrange(limit_low,limit_high),xrange(limit_low,limit_high),'--k',linewidth=1)
+		cor = np.corrcoef(zip(*[(a,b) for a,b in zip(datas[0],datas[1]) if not (math.isnan(a) or math.isnan(b))]))[0][1]
+		axes[ind].set_title('Correlation: ' + str(cor),fontsize=10)
 
-	ax1.plot(LN,LV,'r+')
-	ax1.plot(xrange(70,270),xrange(70,270),'--k',linewidth=1)
-	ax1.plot([LNm,LNm],[70,LVm],'-k',linewidth=0.5)
-	ax1.plot([70,LNm],[LVm,LVm],'-k',linewidth=0.5)
+		axes[ind].set_xlim([limit_low,limit_high]); axes[ind].set_ylim([limit_low,limit_high])
+		axes[ind].set_xlabel(titles[0] + ' (% vainqueur)'); axes[ind].set_ylabel(titles[1] +' (% vainqueur)')
 
-	ax1.set_xlim([70,270]); ax1.set_ylim([70,270])
-	ax1.set_xlabel('Natation (% vainqueur)'); ax1.set_ylabel('Vélo (% vainqueur)')
+	# Plot Histogram distributions
+	fig = plt.figure()
+	fig, axes = plt.subplots(ncols=2, nrows=2); axes = axes.ravel()
+	for ind, title in enumerate(['Scratch','Natation','Velo','Cap']):
+		axes[ind].hist(normalize_col(rankings[title].dropna()), nb_athletes/10, facecolor=cl(ind), alpha=0.9)
+		axes[ind].set_ylabel('Number of athletes')
+		axes[ind].set_xlabel(title + ' (% vainqueur)')
+	fig.tight_layout()
 
-	ax2.plot(LC,LN,'g+')
-	ax2.plot(xrange(70,270),xrange(70,270),'--k',linewidth=1)
-	ax2.plot([LCm,LCm],[70,LNm],'-k',linewidth=0.5)
-	ax2.plot([70,LCm],[LNm,LNm],'-k',linewidth=0.5)
-	ax2.set_xlim([70,270]); ax2.set_ylim([70,270])
-	ax2.set_xlabel('Cap (% vainqueur)'); ax2.set_ylabel('Natation (% vainqueur)')
-			
-	ax3.plot(LV,LC,'b+')
-	ax3.plot(xrange(70,270),xrange(70,270),'--k',linewidth=1)
-	ax3.plot([LVm,LVm],[70,LCm],'-k',linewidth=0.5)
-	ax3.plot([70,LVm],[LCm,LCm],'-k',linewidth=0.5)
-	ax3.set_xlim([70,270]); ax3.set_ylim([70,270])
-	ax3.set_xlabel('Vélo (% vainqueur)'); ax3.set_ylabel('Cap (% vainqueur)')
+	# Plot Scratch Rankings	
+	fig = plt.figure()
+	ax = fig.add_subplot(111)
+	plt.plot(normalize_col(rankings['Scratch']),'y')
+	ax.set_xlabel('Classement'); ax.set_ylabel('Temps scratch (% vainqueur)')	
 
-	ax4.plot(LS,'y')
-	ax4.set_xlim([70,270]); ax4.set_ylim([70,270])
-	ax4.set_xlabel('Classement'); ax4.set_ylabel('Temps scratch(% vainqueur)')
-	ax4.autoscale(tight=True)
-					
-	mng = plt.get_current_fig_manager()
-	mng.full_screen_toggle()
 	plt.show()	
+
+
+					
+if __name__ == '__main__':
+	from utils import *
+	from modele import *
+	T = TRICLAIRModele()
+	A=T.get_list_triathlons(2014)
+	tri=A.loc[2]
+	B=T.get_data_triathlon(tri.link,2014)
+	plot_data_triathlon(tri,B)	
