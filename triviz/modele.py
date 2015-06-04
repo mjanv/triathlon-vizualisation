@@ -91,10 +91,10 @@ class TRICLAIRModele(object):
 	    return [(year,self.get_ranking_athletes(year)) for year in range(START_YEAR,datetime.today().year)]    
 
 	@echo('Loading data of athlete')
-	def get_data_athlete(self,identifier):
-	    if identifier not in self.data_athletes:
-	        self.data_athletes[identifier] = self.__load_data_athlete(year)
-	    return self._data_athletes[identifier]	
+	def get_data_athlete(self,iden):
+	    if iden not in self._data_athletes:
+	        self._data_athletes[iden] = self.__load_data_athlete(iden)
+	    return self._data_athletes[iden]	
 
 	@echo('Loading data of triathlon')
 	def get_data_triathlon(self,link,year):
@@ -137,10 +137,10 @@ class TRICLAIRModele(object):
 			columns.setdefault('points', []).append(int(col[3].text))
 		return pd.DataFrame(columns).replace(u'',u'NON LICENCIE')
 
-	def load_data_athlete(self,id):
+	def __load_data_athlete(self,iden):
 		""" Extract the main table of an athlete's page knowing its id provided in the DataFrame computed by GetDataAthletes()
 			which resumes the date, name, format (S,M,..), number of points, coefficient and total of each race. Returns a Pandas DataFrame. """	
-		table = bs.BeautifulSoup(urllib.urlopen(BASE_URL + ATHLETE_URL + str(identifier) +'.htm').read()).findAll('table')[1]
+		table = bs.BeautifulSoup(urllib.urlopen(BASE_URL + ATHLETE_URL + str(iden) +'.htm').read()).findAll('table')[1]
 		sections  = ['date'     ,'course'        ,'format'   ,'points','coeff','total']	# Name sections for cleaning and converting data
 		functions = [convertDate,lambda x: x[:-1],lambda x: x,int     ,int    ,int    ] # its attached function for cleaning and converting data
 		columns = dict() 

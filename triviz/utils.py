@@ -12,6 +12,11 @@ import numpy as np
 import scipy
 import math
 
+from scipy.stats import norm
+import matplotlib.mlab as mlab
+
+from pandas.tools.plotting import scatter_matrix
+
 from itertools import combinations
 from scipy.stats.stats import pearsonr
 import matplotlib.cm as cm
@@ -67,6 +72,7 @@ def plot_data_triathlon(triathlon_info,rankings,head=None):
 	nb_athletes = len(rankings)
 	if head is not None:
 		rankings = rankings.head(head)
+	rankings = rankings.dropna().apply(normalize_col)	
 
 	# Plot Correlation beetween Variable
 	fig, axes = plt.subplots(ncols=3, nrows=2); axes = axes.ravel()
@@ -75,7 +81,7 @@ def plot_data_triathlon(triathlon_info,rankings,head=None):
 	cl  = cm.get_cmap('gist_rainbow',6)
 
 	for ind, titles in enumerate(combinations(['Scratch','Natation','Velo','Cap'],2)):
-		datas = [normalize_col(rankings[title]) for title in titles]
+		datas = [rankings[title] for title in titles]
 		limit_low = int(min(map(min,datas))); limit_high = int(max(map(max,datas)))
 		axes[ind].plot(datas[0],datas[1],'o',color=cl(ind),markersize=10)
 		axes[ind].plot(xrange(limit_low,limit_high),xrange(limit_low,limit_high),'--k',linewidth=1)
@@ -86,13 +92,20 @@ def plot_data_triathlon(triathlon_info,rankings,head=None):
 		axes[ind].set_xlabel(titles[0] + ' (% vainqueur)'); axes[ind].set_ylabel(titles[1] +' (% vainqueur)')
 
 	# Plot Histogram distributions
-	fig = plt.figure()
 	fig, axes = plt.subplots(ncols=2, nrows=2); axes = axes.ravel()
 	for ind, title in enumerate(['Scratch','Natation','Velo','Cap']):
-		axes[ind].hist(normalize_col(rankings[title].dropna()), nb_athletes/10, facecolor=cl(ind), alpha=0.9)
+		data = rankings[title]
+		(mu,sigma) = norm.fit(data)
+		n, bins, patches = axes[ind].hist(data, nb_athletes/10, facecolor=cl(ind), alpha=0.4)
+		axes[ind].plot(bins, (max(data)*2)*mlab.normpdf(bins, mu, sigma), '-',color='gray', linewidth=4,label=r'$\mathrm{2014:}\ \mu=%.3f,\ \sigma=%.3f$' %(mu, sigma))
+		axes[ind].legend(loc='best', fancybox=True, framealpha=0.5)
 		axes[ind].set_ylabel('Number of athletes')
 		axes[ind].set_xlabel(title + ' (% vainqueur)')
 	fig.tight_layout()
+
+	#Plot test
+	fig = plt.figure()
+	scatter_matrix(rankings.loc[:,'Scratch':], alpha=0.2, figsize=(12, 12), diagonal='hist')
 
 	# Plot Scratch Rankings	
 	fig = plt.figure()
