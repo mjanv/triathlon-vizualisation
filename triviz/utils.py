@@ -66,13 +66,19 @@ def plot_data_all_triathlons(self,mask):
 	plt.show()
 
 
-def plot_data_triathlon(triathlon_info,rankings,head=None):
+def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None):
 	""" Plot interesting data about triathlon """
 
 	nb_athletes = len(rankings)
 	if head is not None:
 		rankings = rankings.head(head)
-	rankings = rankings.dropna().apply(normalize_col)	
+	rankings = pd.concat([rankings.loc[:,:'Sexe'],rankings.loc[:,'Scratch':].apply(normalize_col)],axis=1).dropna()
+
+	if name is not None:
+		resultat=rankings[rankings['Nom']==name]
+
+	if filters is not None:
+		pass # TODO	
 
 	# Plot Correlation beetween Variable
 	fig, axes = plt.subplots(ncols=3, nrows=2); axes = axes.ravel()
@@ -86,10 +92,13 @@ def plot_data_triathlon(triathlon_info,rankings,head=None):
 		axes[ind].plot(datas[0],datas[1],'o',color=cl(ind),markersize=10)
 		axes[ind].plot(xrange(limit_low,limit_high),xrange(limit_low,limit_high),'--k',linewidth=1)
 		cor = np.corrcoef(zip(*[(a,b) for a,b in zip(datas[0],datas[1]) if not (math.isnan(a) or math.isnan(b))]))[0][1]
-		axes[ind].set_title('Correlation: ' + str(cor),fontsize=10)
 
+		if name is not None:
+			axes[ind].plot(resultat[titles[0]],resultat[titles[1]],'D',color='black',markersize=10) 
+
+		axes[ind].set_title('Correlation: ' + str(cor),fontsize=10)
 		axes[ind].set_xlim([limit_low,limit_high]); axes[ind].set_ylim([limit_low,limit_high])
-		axes[ind].set_xlabel(titles[0] + ' (% vainqueur)'); axes[ind].set_ylabel(titles[1] +' (% vainqueur)')
+		axes[ind].set_xlabel(titles[0] + ' (% winner)'); axes[ind].set_ylabel(titles[1] +' (% winner)')
 
 	# Plot Histogram distributions
 	fig, axes = plt.subplots(ncols=2, nrows=2); axes = axes.ravel()
@@ -97,20 +106,20 @@ def plot_data_triathlon(triathlon_info,rankings,head=None):
 		data = rankings[title]
 		(mu,sigma) = norm.fit(data)
 		n, bins, patches = axes[ind].hist(data, nb_athletes/10, facecolor=cl(ind), alpha=0.4)
-		axes[ind].plot(bins, (max(data)*2)*mlab.normpdf(bins, mu, sigma), '-',color='gray', linewidth=4,label=r'$\mathrm{2014:}\ \mu=%.3f,\ \sigma=%.3f$' %(mu, sigma))
+		if name is not None:
+			axes[ind].axvline(resultat[title].values[0],color='red',linestyle='dashed')
+		axes[ind].plot(bins, max(bins)*mlab.normpdf(bins, mu, sigma), '-',color='gray', linewidth=4,label=r'$\mu=%.3f,\ \sigma=%.3f$' %(mu, sigma))
 		axes[ind].legend(loc='best', fancybox=True, framealpha=0.5)
 		axes[ind].set_ylabel('Number of athletes')
-		axes[ind].set_xlabel(title + ' (% vainqueur)')
+		axes[ind].set_xlabel(title + ' (% winner)')
 	fig.tight_layout()
-
-	#Plot test
-	fig = plt.figure()
-	scatter_matrix(rankings.loc[:,'Scratch':], alpha=0.2, figsize=(12, 12), diagonal='hist')
 
 	# Plot Scratch Rankings	
 	fig = plt.figure()
 	ax = fig.add_subplot(111)
-	plt.plot(normalize_col(rankings['Scratch']),'y')
+	plt.plot(rankings['Scratch'],'y')
+	if name is not None:
+		plt.plot(resultat['Place'],resultat['Scratch'],'D',color='black',markersize=15) 
 	ax.set_xlabel('Classement'); ax.set_ylabel('Temps scratch (% vainqueur)')	
 
 	plt.show()	
