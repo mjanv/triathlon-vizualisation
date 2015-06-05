@@ -111,7 +111,7 @@ class TRICLAIRModele(object):
 	def __load_data_athlete(self,iden):
 		""" Extract the main table of an athlete's page knowing its id provided in the DataFrame computed by GetDataAthletes()
 			which resumes the date, name, format (S,M,..), number of points, coefficient and total of each race. Returns a Pandas DataFrame. """	
-		table = bs.BeautifulSoup(urllib.urlopen(BASE_URL + ATHLETE_URL + str(iden) +'.htm').read()).findAll('table')[1]
+		table = self.__get_soup_webpage(BASE_URL + ATHLETE_URL + str(iden) +'.htm').findAll('table')[1]
 		sections  = ['date'     ,'course'        ,'format'   ,'points','coeff','total']	# Name sections for cleaning and converting data
 		functions = [convertDate,lambda x: x[:-1],lambda x: x,int     ,int    ,int    ] # its attached function for cleaning and converting data
 		columns = dict() 
@@ -166,14 +166,11 @@ class TRICLAIRModele(object):
 
 		return pd.DataFrame(columns)	
 
-	def __get_soup_webpage(self,link,_cache={}):
-		return bs.BeautifulSoup(urllib.urlopen(link).read())
-		if link not in _cache:
-			_cache[link] = bs.BeautifulSoup(urllib.urlopen(link).read())
-		return _cache[link]
-
-	def ab(self):
-		return 4	
+	def __get_soup_webpage(self,link):
+		try:
+			return bs.BeautifulSoup(urllib.urlopen(link).read())
+		except IOError:
+			return None	
 
 
 if __name__ == '__main__':
