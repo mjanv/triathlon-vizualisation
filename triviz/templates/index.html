@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <style type="text/css">    
+      body
+      {
+      	font-family:Helvetica;
+      	background-image:url('/static/images/plaid.png');
+      	background-repeat: repeat;
+      }
+	table, th, td {
+	    border: 1px solid black;
+	   	border-collapse: collapse;
+	}  
+	th, td {
+    padding: 3px;
+	}
+    </style>
+
+  <head>
+    <title>Triathlon vizualisation {{ author }}</title>
+  </head>
+
+  <body>
+    <h1>{{ title }}</h1>
+    <table style="width:100%">
+      {% for l in L %}
+      	<tr>{% for e in l %}<td>{{ e }}</td>{% endfor %}</tr>
+      {% endfor %}
+    </table>
+  </body>
+
+<form action="/signup" method="post">
+	Choisir une année		
+  <select name="year">
+	  <option value="2010">2010</option>
+	  <option value="2011">2011</option>
+	  <option value="2012">2012</option>
+	  <option value="2013">2013</option>
+	  <option value="2014">2014</option>
+	  <option value="2015">2015</option>
+  </select>
+  <input type="text" name="name"></input>
+  <input type="submit" value="Signup"></input>
+</form>
+
+</html>

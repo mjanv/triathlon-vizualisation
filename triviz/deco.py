@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 
 from __future__ import unicode_literals
+from __future__ import print_function
 
 import pandas as pd
 from functools import wraps
@@ -12,7 +13,7 @@ def echo(msg=''):
 	def echo_inside(fn):
 	    def wrapped(*v, **k):
 	        if v[0].verbose:
-	        	print ":: Calling %s: %s" % (fn.__name__,msg)
+	        	print(":: Calling %s: %s" % (fn.__name__,msg))
 	        return fn(*v, **k) 
 	    return wrapped
 	return echo_inside

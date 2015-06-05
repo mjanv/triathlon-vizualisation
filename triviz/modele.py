@@ -2,13 +2,13 @@
 # -*- coding: utf8 -*-
 
 from __future__ import unicode_literals
+from __future__ import print_function
 
 import numpy as np
 import scipy as sp
 import pandas as pd
 
 import matplotlib.pyplot as plt
-import Tkinter
 
 import sys, urllib
 import bs4 as bs
@@ -32,42 +32,14 @@ SEASON_URL = u'/resultats/challenge-triathlon-rhone-alpes.php?saison='
 ATHLETE_URL = u'/resultats/challenge-rhone-alpes-detail-triathlete-'
 START_YEAR = 2010
 
-class TRICLAIRControler(object):
-	def __init__(self,verbose=False,store_data='data/'):
-		self.verbose = verbose
-		self.store_data = store_data
-
-		self.modele = TRICLAIRModele(verbose,store_data)
-		self.view = TRICLAIRView(None,self)
-
-		self.log = logging.getLogger()
-		self.log.setLevel(logging.INFO)
-		self.log.handlers = []
-		stream_handler = logging.StreamHandler() 
-		stream_handler.setLevel(logging.INFO)
-		self.log.addHandler(stream_handler)	
-
-	def launch(self):	
-		self.view.mainloop()	 		
-
-	def trigger(self,tr):
-		res =  self.modele.get_list_triathlons(2014) 
-		print res
-		for ind,r in enumerate(res['name']+res['format']):
-			self.view.Lb1.insert(ind,r)
-		self.view.labelVariable.set("Done")
-	
-
-
 class TRICLAIRModele(object):
 	_list_triathlons = {}
 	_ranking_athletes = {}
 	_data_triathlon = {}
 	_data_athletes = {}
 
-	def __init__(self,verbose=True,store_data='data/'):
+	def __init__(self,verbose=True):
 		self.verbose = verbose
-		self.store_data = store_data
 
 	@echo('Loading list of triathlons')
 	def get_list_triathlons(self,year):
@@ -78,17 +50,16 @@ class TRICLAIRModele(object):
 	@echo('Loading list of triathlons for each year')
 	def get_list_all_triathlons(self):
 		return pd.concat([self.get_list_triathlons(year) for year in range(START_YEAR,datetime.today().year)])
-			  
 
-	@echo('Loading ranking of athletes')    
+	@echo('Loading ranking of athletes')
 	def get_ranking_athletes(self,year):
-	    if year not in self._ranking_athletes:
-	        self._ranking_athletes[year] = self.__load_ranking_athletes(year)
-	    return self._ranking_athletes[year]
+		if year not in self._ranking_athletes:
+			self._ranking_athletes[year] = self.__load_ranking_athletes(year)
+		return self._ranking_athletes[year]
 
 	@echo('Loading ranking of athletes for each year') 
 	def get_all_ranking_athletes(self,year):
-	    return [(year,self.get_ranking_athletes(year)) for year in range(START_YEAR,datetime.today().year)]    
+		return [(year,self.get_ranking_athletes(year)) for year in range(START_YEAR,datetime.today().year)]    
 
 	@echo('Loading data of athlete')
 	def get_data_athlete(self,iden):
@@ -102,7 +73,7 @@ class TRICLAIRModele(object):
 			self._data_triathlon[link] = self.__load_data_triathlon(link,year)
 		return self._data_triathlon[link]	   	    	
 
-	def __load_list_triathlons(self,year=datetime.today().year-1):
+	def __load_list_triathlons(self,year):
 		""" Extract the table in the pages http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php?saison=[year]
 			which resumes the date, name, format, and link of each triathlon of the specified year. Returns a Pandas DataFrame. """	
 		if year not in range(START_YEAR,datetime.today().year):
@@ -150,7 +121,7 @@ class TRICLAIRModele(object):
 		return pd.DataFrame(columns)
 
 	def __load_data_triathlon(self,link,year):
- 		""" TODO """	
+		""" TODO """
 		table = self.__get_soup_webpage(BASE_URL + link).findAll('table')[-1]
 
 		entete = map(lambda x: x.text,table.find_all('tr')[0].find_all('th'))
@@ -201,45 +172,8 @@ class TRICLAIRModele(object):
 			_cache[link] = bs.BeautifulSoup(urllib.urlopen(link).read())
 		return _cache[link]
 
-class TRICLAIRView(Tkinter.Tk):
-    def __init__(self,parent,controler):
-        Tkinter.Tk.__init__(self,parent)
-        self.parent = parent
-        self.controler = controler
-        self.initialize()
-
-    def initialize(self):
-    	self.title('TRICLAIR Data Visualization')
-    	self.grid()
-
-        self.entry = Tkinter.Entry(self)
-        self.entry.grid(column=0,row=0,sticky='EW')
-
-        button = Tkinter.Button(self,text=u"Download",command=self.OnButtonClick)
-        button.grid(column=0,row=1)
-        button2 = Tkinter.Button(self,text=u"Plot",command=self.plotdata_tri)
-        button2.grid(column=1,row=1)
-
-        self.Lb1 = Tkinter.Listbox(self,selectmode=Tkinter.BROWSE)
-        self.Lb1.pack(fill=Tkinter.BOTH, expand=1)
-        self.Lb1.grid(column=0,row=2,columnspan=2)
-
-        self.labelVariable = Tkinter.StringVar()
-        label = Tkinter.Label(self,textvariable=self.labelVariable,anchor="w",fg="white",bg="blue")
-        label.grid(column=0,row=3,columnspan=2,sticky='EW')
-
-    def OnButtonClick(self):
-    	self.labelVariable.set("Get list of 2014!")
-    	self.controler.trigger('getlist')
-    	print  self.Lb1.curselection()
-        print "You clicked the button !"   
-
-    def plotdata_tri(self):
-		list_triathlons = self.controler.modele.get_list_triathlons(2014)
-		for l,n,f in zip(list_triathlons['link'],list_triathlons['name'],list_triathlons['format']):
-			S = self.controler.modele.get_data_triathlon(l,n,f,2014)
-			print S['Scratch'].dropna()
-
+	def ab(self):
+		return 4	
 
 
 if __name__ == '__main__':
