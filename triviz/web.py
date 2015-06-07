@@ -11,27 +11,30 @@ app = Flask(__name__,static_url_path='/static')
 
 @app.route('/')
 def render_index():
-    return render_template('index.html', title="",L=[],form=[])
+    return render_template('index.html', title="",L=[],form=[],form2=[])
 
 @app.route('/chooseyear', methods = ['POST'])
 def chooseyear():
     year = request.form['year']
     T = modele.TRICLAIRModele()
     L = T.get_list_triathlons(int(year))
+    L2 = T.get_ranking_athletes(int(year))
     form = zip(list(L['name'] + L['format']),list(L['link']))
-    return render_template('index.html', title="List of triathlons " + year,L=L.values.tolist(),form=form)
+    form2 = zip(list(L2['name']),list(L2['id']))
+    return render_template('index.html', title="List of triathlons " + year,L=L.values.tolist(),form=form,form2 = form2)
 
 @app.route('/choosetriathlon', methods = ['POST'])
 def choosetriathlon():
     T = modele.TRICLAIRModele()
-    print request.form
     if request.form['max']:
         L = T.get_data_triathlon(link=request.form['tri']).head(int(request.form['max']))
-    return render_template('index.html',title="",L=L.values.tolist(),form=[])
+    return render_template('index.html',title="NAME OF TRIATHLON",L=L.values.tolist(),form=[],form2=[])
 
 @app.route('/chooseathlete', methods = ['POST'])
 def choosetathlete():
-    return render_template('index.html',title="",L=[],form=[])         
+    T = modele.TRICLAIRModele()
+    L =  T.get_data_athlete(request.form['athlete']) 
+    return render_template('index.html',title="NAME OF THE ATHLETE",L=L.values.tolist(),form=[],form2=[])         
 
 def create_img(fig):
     import StringIO

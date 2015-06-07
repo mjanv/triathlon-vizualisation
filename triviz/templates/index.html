@@ -22,7 +22,7 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="/">Home</a></li>
         <li><a href="http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php">TRICLAIR Challenge Webpage</a></li>
-        <li><a href="https://github.com/mjanv/triathlon-vizualisation">Github Project</a></li>
+        <li><a href="https://github.com/mjanv/triathlon-vizualisation">GitHub Project</a></li>
       </ul>
     </div>
   </div>
@@ -82,8 +82,9 @@
                         <legend>Afficher le résumé d'un triathlète</legend>  
                         <div class="form-group">
                             <select class="form-control" name="athlete">
-                                <option value="">{}</option>
-                                <option value="">()</option>
+                                    {% for l in form2 %}
+                                        <option value="{{ l[1] }}">{{ l[0] }}</option>
+                                    {% endfor %}
                             </select>
                         </div>  
   
