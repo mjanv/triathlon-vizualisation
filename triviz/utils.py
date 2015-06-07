@@ -66,7 +66,7 @@ def plot_data_all_triathlons(self,mask):
 	plt.show()
 
 
-def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None):
+def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None,returnfig=False):
 	""" Plot interesting data about triathlon """
 
 	nb_athletes = len(rankings)
@@ -80,10 +80,12 @@ def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None
 	if filters is not None:
 		pass # TODO	
 
+	figs = []	
+
 	# Plot Correlation beetween Variable
 	fig, axes = plt.subplots(ncols=3, nrows=2); axes = axes.ravel()
 	fig.tight_layout(pad=2.0, w_pad=2.0, h_pad=2.0)
-	fig.suptitle(" ".join((triathlon_info['name'],str(triathlon_info['date'].year))),fontsize=12)
+	#fig.suptitle(" ".join((triathlon_info['name'],str(triathlon_info['date'].year))),fontsize=12)
 	cl  = cm.get_cmap('gist_rainbow',6)
 
 	for ind, titles in enumerate(combinations(['Scratch','Natation','Velo','Cap'],2)):
@@ -99,6 +101,7 @@ def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None
 		axes[ind].set_title('Correlation: ' + str(cor),fontsize=10)
 		axes[ind].set_xlim([limit_low,limit_high]); axes[ind].set_ylim([limit_low,limit_high])
 		axes[ind].set_xlabel(titles[0] + ' (% winner)'); axes[ind].set_ylabel(titles[1] +' (% winner)')
+	figs.append(fig)
 
 	# Plot Histogram distributions
 	fig, axes = plt.subplots(ncols=2, nrows=2); axes = axes.ravel()
@@ -113,6 +116,7 @@ def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None
 		axes[ind].set_ylabel('Number of athletes')
 		axes[ind].set_xlabel(title + ' (% winner)')
 	fig.tight_layout()
+	figs.append(fig)	
 
 	# Plot Scratch Rankings	
 	fig = plt.figure()
@@ -120,9 +124,13 @@ def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None
 	plt.plot(rankings['Scratch'],'y')
 	if name is not None:
 		plt.plot(resultat['Place'],resultat['Scratch'],'D',color='black',markersize=15) 
-	ax.set_xlabel('Classement'); ax.set_ylabel('Temps scratch (% vainqueur)')	
-
-	plt.show()	
+	ax.set_xlabel('Classement'); ax.set_ylabel('Temps scratch (% vainqueur)')
+	figs.append(fig)	
+	print figs
+	if returnfig:
+		return figs
+	else:	
+		plt.show()	
 
 
 					

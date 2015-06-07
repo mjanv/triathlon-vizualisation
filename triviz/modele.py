@@ -68,7 +68,7 @@ class TRICLAIRModele(object):
 	    return self._data_athletes[iden]	
 
 	@echo('Loading data of triathlon')
-	def get_data_triathlon(self,link,year):
+	def get_data_triathlon(self,link,year=0):
 		if link not in self._data_triathlon:
 			self._data_triathlon[link] = self.__load_data_triathlon(link,year)
 		return self._data_triathlon[link]	   	    	

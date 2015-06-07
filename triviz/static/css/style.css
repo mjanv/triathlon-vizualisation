@@ -1,0 +1,42 @@
+body {
+    font-family:Helvetica;
+    background-image:url('/static/images/square_bg.png');
+    background-repeat: repeat;
+}
+
+h1 { 
+    text-align: center 
+}
+
+table {
+    width: 60%;
+}
+
+td,th {
+    font-size: 1em;
+    border: 1px solid #ddd;
+    padding: 5px 2px;
+}
+
+th {
+    text-align: center;
+    background-color: #A7C942;
+    color: #ffffff;
+}
+
+tr:nth-child(even) {
+    background-color: #eeeeee;
+}
+
+tr:nth-child(odd) {
+    background-color: #fafafa;
+}
+
+#form {
+    border: 1px solid #ddd;
+    margin: 5px;
+    padding: 5px;
+    text-align:center;
+    float:left;
+    background-color: #fafafa;
+}
