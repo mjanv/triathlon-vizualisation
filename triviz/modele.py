@@ -17,6 +17,8 @@ import re
 from deco import echo
 from utils import *
 
+from collections import OrderedDict
+
 
 BASE_URL = u'http://www.triclair.com'
 SEASON_URL = u'/resultats/challenge-triathlon-rhone-alpes.php?saison='

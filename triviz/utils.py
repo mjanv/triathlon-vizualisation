@@ -15,8 +15,6 @@ import math
 from scipy.stats import norm
 import matplotlib.mlab as mlab
 
-from pandas.tools.plotting import scatter_matrix
-
 from itertools import combinations
 from scipy.stats.stats import pearsonr
 import matplotlib.cm as cm
@@ -118,6 +116,33 @@ def plot_data_triathlon(useless,rankings,head=None,name=None,filters=None,return
         return figs
     else:   
         plt.show()  
+
+def plot_data_athlete(P,tris,name_athlete):
+    plt.style.use('ggplot')
+    resultats = []
+    figs = []
+    for trit,name,form in zip(tris,P['course'],P['format']):
+        tri = pd.concat([trit.loc[:,:'Sexe'],trit.loc[:,'Scratch':].apply(normalize_col)],axis=1).dropna()
+        resultat = tri[(tri['Nom']== name_athlete) | (tri['Nom'] == ' '.join(name_athlete.split(' ',1)[::-1]))]
+        if resultat.empty: 
+            pass
+        resultats.append(resultat.loc[:,'Scratch':])
+    resultats = pd.concat(resultats).reset_index()
+    resultats = resultats.rename(columns={'index':'Place'})
+    resultats = pd.concat([P['course'],resultats],axis=1)
+    resultats = resultats.drop('Place',axis=1)
+    resultats = resultats.set_index('course')
+
+    ax = resultats.plot(ylim=(90,round(max(map(max,resultats.values)))),kind='bar',rot=90)
+    plt.xlabel('Time (% winner)')
+    figs.append(create_img(ax.get_figure()))
+
+    ax = resultats.plot(kind='box',use_index=True)
+    plt.ylabel('Time (% winner)')
+    figs.append(create_img(ax.get_figure()))    
+
+    return figs
+           
 
 def create_img(fig):
     import urllib
