@@ -2,21 +2,24 @@ from flask import Flask, render_template
 from flask import request, redirect
 from flask import make_response
 
+import urllib
+
 import modele
+import utils
 import pandas as pd
 
-import base64
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import StringIO
 
 app = Flask(__name__,static_url_path='/static')
 
 @app.route('/')
 def render_index():
-    print 'BITE1'
     return render_template('index.html')
 
 @app.route('/chooseyear', methods = ['POST'])
 def chooseyear():
-    print 'BITE2'
     year = int(request.form['year'])
     T = modele.TRICLAIRModele()
     L = T.get_list_triathlons(year)
@@ -31,41 +34,52 @@ def chooseyear():
 
 @app.route('/choosetriathlon', methods = ['POST'])
 def choosetriathlon():
-    print 'BITE3'
     name,link = request.form['tri'].split(';')
     T = modele.TRICLAIRModele()
     L = T.get_data_triathlon(link=link)
+
+    print 'ERT'
+    #import pdb; pdb.set_trace();
+    images = utils.plot_data_triathlon(0,rankings=L,returnfig=True)
+    print 'ZER'
+
     if request.form['max']:
-        L = L .head(int(request.form['max']))
+        L = L.head(int(request.form['max']))
+
     table = dict()
     table['head'] = L.keys().tolist()
     table['rows'] = L.values.tolist()    
 
-    return render_template('index.html',title=name,table=table)
+
+
+    return render_template('index.html',title=name,images=images)
 
 @app.route('/chooseathlete', methods = ['POST'])
 def choosetathlete():
-    print 'BITE4'
     name,iden = request.form['athlete'].split(';')
     T = modele.TRICLAIRModele()
     L = T.get_data_athlete(iden) 
     table = dict()
     table['head'] = L.keys().tolist()
     table['rows'] = L.values.tolist() 
+    fig = create_img(plotrandom())
+  
+    return render_template('index.html',title=name,table=table,images=[fig,fig])      
 
-    return render_template('index.html',title=name,table=table)         
+def plotrandom():
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.plot([1,2,0,3,2,4,0])
+    return fig   
 
 def create_img(fig):
-    import StringIO
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-    from matplotlib.figure import Figure
- 
-    canvas=FigureCanvas(fig)
+    import StringIO
+    canvas = FigureCanvas(fig)
     png_output = StringIO.StringIO()
     canvas.print_png(png_output)
-    return png_output.getvalue()
-    #response=make_response(png_output.getvalue())
-    #response.headers['Content-Type'] = 'image/png'           
+    return 'data:image/png;base64,{}'.format(urllib.quote(png_output.getvalue().encode('base64').rstrip('\n')))
+         
 
 if __name__ == "__main__":
     app.run()

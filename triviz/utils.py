@@ -44,29 +44,7 @@ def normalize_col(df):
 	J = map(lambda x: float(x.total_seconds()) if isinstance(x,timedelta) else float('nan'),list(df))
 	return map(lambda x: 100.0*x/J[0],J)
 
-def get_mask(self,format=None,name=None):
-	all_true = [True]*len(self.list_triathlons['format'])
-	format = all_true if format is None else self.list_triathlons['format']==format
-	name   = all_true if name   is None else map(lambda x: name in x,self.list_triathlons['name'])
-
-	return [x&y for (x,y) in zip(format,name)]
-
-def plot_data_all_triathlons(self,mask):
-	data = [self.get_data_scratch_triathlon(n,f) for n,f in zip(self.list_triathlons['name'][mask],self.list_triathlons['format'][mask])]
-		
-	data2 = [normalize_col(d['Scratch'].dropna()) for d in data]	
-	plt.style.use(u'ggplot')
-	fig, ax1 = plt.subplots()
-	ax1.boxplot(data2,vert=False)
-	ytickNames = plt.setp(ax1, yticklabels=list(self.list_triathlons['name']))
-	plt.setp(ytickNames, rotation=0, fontsize=8)
-	ax1.set_xlim([90,300])
-	ax1.set_xlabel('Temps scratch (% vainqueur)')
-	ax1.set_ylabel('Triathlon')
-	plt.show()
-
-
-def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None,returnfig=False):
+def plot_data_triathlon(useless,rankings,head=None,name=None,filters=None,returnfig=False):
 	""" Plot interesting data about triathlon """
 
 	nb_athletes = len(rankings)
@@ -81,11 +59,11 @@ def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None
 		pass # TODO	
 
 	figs = []	
+	plt.style.use('ggplot')
 
 	# Plot Correlation beetween Variable
 	fig, axes = plt.subplots(ncols=3, nrows=2); axes = axes.ravel()
 	fig.tight_layout(pad=2.0, w_pad=2.0, h_pad=2.0)
-	#fig.suptitle(" ".join((triathlon_info['name'],str(triathlon_info['date'].year))),fontsize=12)
 	cl  = cm.get_cmap('gist_rainbow',6)
 
 	for ind, titles in enumerate(combinations(['Scratch','Natation','Velo','Cap'],2)):
@@ -96,12 +74,12 @@ def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None
 		cor = np.corrcoef(zip(*[(a,b) for a,b in zip(datas[0],datas[1]) if not (math.isnan(a) or math.isnan(b))]))[0][1]
 
 		if name is not None:
-			axes[ind].plot(resultat[titles[0]],resultat[titles[1]],'D',color='black',markersize=10) 
+			axes[ind].plot(resultat[titles[0]],resultat[titles[1]],'D',color='black',markersize=5) 
 
 		axes[ind].set_title('Correlation: ' + str(cor),fontsize=10)
 		axes[ind].set_xlim([limit_low,limit_high]); axes[ind].set_ylim([limit_low,limit_high])
 		axes[ind].set_xlabel(titles[0] + ' (% winner)'); axes[ind].set_ylabel(titles[1] +' (% winner)')
-	figs.append(fig)
+	figs.append(create_img(fig))
 
 	# Plot Histogram distributions
 	fig, axes = plt.subplots(ncols=2, nrows=2); axes = axes.ravel()
@@ -116,7 +94,8 @@ def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None
 		axes[ind].set_ylabel('Number of athletes')
 		axes[ind].set_xlabel(title + ' (% winner)')
 	fig.tight_layout()
-	figs.append(fig)	
+	figs.append(create_img(fig))
+	
 
 	# Plot Scratch Rankings	
 	fig = plt.figure()
@@ -125,20 +104,19 @@ def plot_data_triathlon(triathlon_info,rankings,head=None,name=None,filters=None
 	if name is not None:
 		plt.plot(resultat['Place'],resultat['Scratch'],'D',color='black',markersize=15) 
 	ax.set_xlabel('Classement'); ax.set_ylabel('Temps scratch (% vainqueur)')
-	figs.append(fig)	
-	print figs
+	figs.append(create_img(fig))
+	
 	if returnfig:
 		return figs
 	else:	
 		plt.show()	
 
-
+def create_img(fig):
+    import urllib
+    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+    import StringIO
+    canvas = FigureCanvas(fig)
+    png_output = StringIO.StringIO()
+    canvas.print_png(png_output)
+    return 'data:image/png;base64,{}'.format(urllib.quote(png_output.getvalue().encode('base64').rstrip('\n')))
 					
-if __name__ == '__main__':
-	from utils import *
-	from modele import *
-	T = TRICLAIRModele()
-	A=T.get_list_triathlons(2014)
-	tri=A.loc[2]
-	B=T.get_data_triathlon(tri.link,2014)
-	plot_data_triathlon(tri,B)	
