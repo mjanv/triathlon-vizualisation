@@ -36,7 +36,9 @@ def choosetriathlon():
     T = modele.TRICLAIRModele()
     L = T.get_data_triathlon(link=link)
 
-    images = utils.plot_data_triathlon(0,rankings=L,returnfig=True)
+    #import pdb; pdb.set_trace();
+    rank_max = int(request.form['max'] if request.form['max'] else len(L))
+    images = utils.plot_data_triathlon(0,rankings=L,head=rank_max,returnfig=True)
 
     if request.form['max']:
         L = L.head(int(request.form['max']))
@@ -49,7 +51,6 @@ def choosetriathlon():
 
 @app.route('/chooseathlete', methods = ['POST'])
 def choosetathlete():
-    import pdb; pdb.set_trace();
     name,iden,year = request.form['athlete'].split(';')
     T = modele.TRICLAIRModele()
     P = T.get_data_athlete(iden) 
