@@ -8,10 +8,6 @@ h1 {
     text-align: center 
 }
 
-table {
-    width: 60%;
-}
-
 td,th {
     font-size: 1em;
     border: 1px solid #ddd;
@@ -20,7 +16,7 @@ td,th {
 
 th {
     text-align: center;
-    background-color: #A7C942;
+    background-color: #337AB7;
     color: #ffffff;
 }
 

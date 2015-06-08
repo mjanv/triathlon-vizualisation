@@ -11,30 +11,49 @@ app = Flask(__name__,static_url_path='/static')
 
 @app.route('/')
 def render_index():
-    return render_template('index.html', title="",L=[],form=[],form2=[])
+    print 'BITE1'
+    return render_template('index.html')
 
 @app.route('/chooseyear', methods = ['POST'])
 def chooseyear():
-    year = request.form['year']
+    print 'BITE2'
+    year = int(request.form['year'])
     T = modele.TRICLAIRModele()
-    L = T.get_list_triathlons(int(year))
-    L2 = T.get_ranking_athletes(int(year))
-    form = zip(list(L['name'] + L['format']),list(L['link']))
+    L = T.get_list_triathlons(year)
+    L2 = T.get_ranking_athletes(year)
+    table = dict()
+    table['head'] = L.keys().tolist()
+    table['rows'] = L.values.tolist()
+    A = map(lambda x: '  '.join(x),zip(L['name'].tolist(),L['format'].tolist()))
+    form = zip(A,L['link'].tolist())
     form2 = zip(list(L2['name']),list(L2['id']))
-    return render_template('index.html', title="List of triathlons " + year,L=L.values.tolist(),form=form,form2 = form2)
+    return render_template('index.html', title="List of triathlons " + str(year),table=table,form=form,form2 = form2)
 
 @app.route('/choosetriathlon', methods = ['POST'])
 def choosetriathlon():
+    print 'BITE3'
+    name,link = request.form['tri'].split(';')
     T = modele.TRICLAIRModele()
+    L = T.get_data_triathlon(link=link)
     if request.form['max']:
-        L = T.get_data_triathlon(link=request.form['tri']).head(int(request.form['max']))
-    return render_template('index.html',title="NAME OF TRIATHLON",L=L.values.tolist(),form=[],form2=[])
+        L = L .head(int(request.form['max']))
+    table = dict()
+    table['head'] = L.keys().tolist()
+    table['rows'] = L.values.tolist()    
+
+    return render_template('index.html',title=name,table=table)
 
 @app.route('/chooseathlete', methods = ['POST'])
 def choosetathlete():
+    print 'BITE4'
+    name,iden = request.form['athlete'].split(';')
     T = modele.TRICLAIRModele()
-    L =  T.get_data_athlete(request.form['athlete']) 
-    return render_template('index.html',title="NAME OF THE ATHLETE",L=L.values.tolist(),form=[],form2=[])         
+    L = T.get_data_athlete(iden) 
+    table = dict()
+    table['head'] = L.keys().tolist()
+    table['rows'] = L.values.tolist() 
+
+    return render_template('index.html',title=name,table=table)         
 
 def create_img(fig):
     import StringIO

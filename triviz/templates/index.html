@@ -13,102 +13,115 @@
 
 <body>
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Triviz</a>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Triviz</a>
+      </div>
+      <div>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php">TRICLAIR Challenge Webpage</a></li>
+            <li><a href="https://github.com/mjanv/triathlon-vizualisation">GitHub Project</a></li>
+        </ul>
     </div>
-    <div>
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home</a></li>
-        <li><a href="http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php">TRICLAIR Challenge Webpage</a></li>
-        <li><a href="https://github.com/mjanv/triathlon-vizualisation">GitHub Project</a></li>
-      </ul>
-    </div>
-  </div>
+</div>
 </nav>    
 
 <div class="container">
     <h1>TRIVIZ : Data Visualization for Triathletes</h1>
-  <div class="jumbotron">
-    <p>Triviz permet de visualiser simplement et rapidement des données issus des résultats des triathlons FFTRI Rhône-Alpes depuis 2010. Il est possible d'afficher les listes de triathlons année par année, les résultats d'un triathlon ou le résumée individuel d'un triathlète sur un an. La base de données est extraite depuis le site web de Rillieux Triathlon. Projet maintenu par Janvier Maxime, sous licence MIT.</p>
+    <div class="jumbotron">
+        <p>Triviz permet de visualiser simplement et rapidement des données issus des résultats des triathlons FFTRI Rhône-Alpes depuis 2010. Il est possible d'afficher les listes de triathlons année par année, les résultats d'un triathlon ou le résumée individuel d'un triathlète sur un an. La base de données est extraite depuis le site web de Rillieux Triathlon. Projet maintenu par Janvier Maxime, sous licence MIT.</p>
+    </div>
+  <div class="alert alert-warning">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Attention !</strong> Le téléchargement des données peut prendre plusieurs secondes. Soyez patients. ;)
   </div>
-
 </div>
 
 
-    <div class="container"> 
-        <div id="form">
-            <form action="/chooseyear" method="post">
-                <legend>Choisir une année</legend> 
-                <div class="btn-group">
+<div class="container"> 
+    <div id="form">
+        <form action="/chooseyear" method="post">
+            <legend>Choisir une année</legend> 
+            <div class="btn-group">
                 <input type="submit" class="btn btn-primary btn-lg" name="year" value="2010">
                 <input type="submit" class="btn btn-primary btn-lg" name="year" value="2011">
                 <input type="submit" class="btn btn-primary btn-lg" name="year" value="2012">
                 <input type="submit" class="btn btn-primary btn-lg" name="year" value="2013">
                 <input type="submit" class="btn btn-primary btn-lg" name="year" value="2014">
                 <input type="submit" class="btn btn-primary btn-lg disabled" name="year" value="2015">
-                </div>
-            </form>
-        </div>
-    </div> 
+            </div>
+        </form>
+    </div>
+</div> 
 
-    <div class="container"> 
-                <div id="form">
-                    <form class="form-inline" action="/choosetriathlon" method="post">
-                        <legend>Afficher les données d'un triathlon</legend> 
-                        <div class="form-group">
-                                <select class="form-control" name="tri">
-                                    {% for l in form %}
-                                        <option value="{{ l[1] }}">{{ l[0] }}</option>
-                                    {% endfor %}
-                            </select>
-                        </div>  
-                        <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon1">Position</span>
-                            <input type="text" class="form-control" name="max" placeholder="N premiers">
-                        </div>
-                        <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon1">Athlete</span>
-                            <input type="text" class="form-control" name="name" placeholder="Name">
-                        </div>              
-                        <input type="submit" class="btn btn-default btn-sm" value="Launch">
-                    </form>
-                </div>  
-    </div>               
-        <div class="container">
-                <div id="form">
-                    <form class="form-inline" action="/chooseathlete" method="post">
-                        <legend>Afficher le résumé d'un triathlète</legend>  
-                        <div class="form-group">
-                            <select class="form-control" name="athlete">
-                                    {% for l in form2 %}
-                                        <option value="{{ l[1] }}">{{ l[0] }}</option>
-                                    {% endfor %}
-                            </select>
-                        </div>  
-  
-                        <input type="submit" class="btn btn-default btn-sm" value="Launch">
-                    </form>
-                </div>
-        </div>
-        </div>
-
-
-    <div class="container">
-        <h3>{{title}}</h3>    
-        <table class="table">
-            {% if L %}
-            <!--<tr><th>date</th><th>name</th><th>format</th><th>link</th></tr>-->
-            {% for l in L %}
-                <tr>
-                    {% for e in l %}
-                        <td>{{ e }}</td>
+{% if form %}
+<div class="container"> 
+    <div id="form">
+        <form class="form-inline" action="/choosetriathlon" method="post">
+            <legend>Afficher les données d'un triathlon</legend> 
+            <div class="form-group">
+                <select class="form-control" name="tri">
+                    {% for l in form %}
+                    <option value="{{ l[0] }};{{ l[1] }}">{{ l[0] }}</option>
                     {% endfor %}
-                </tr>
+                </select>
+            </div>  
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Position</span>
+                <input type="text" class="form-control" name="max" placeholder="N premiers">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Athlete</span>
+                <input type="text" class="form-control" name="name" placeholder="Name">
+            </div>              
+            <input type="submit" class="btn btn-default btn-sm" value="Launch">
+        </form>
+    </div>  
+</div> 
+{% endif %}
+
+{% if form2 %}
+<div class="container">
+    <div id="form">
+        <form class="form-inline" action="/chooseathlete" method="post">
+            <legend>Afficher le résumé d'un triathlète</legend>  
+            <div class="form-group">
+                <select class="form-control" name="athlete">
+                    {% for l in form2 %}
+                    <option value="{{ l[0] }};{{ l[1] }}">{{ l[0] }}</option>
+                    {% endfor %}
+                </select>
+            </div>  
+
+            <input type="submit" class="btn btn-default btn-sm" value="Launch">
+        </form>
+    </div>
+</div>
+{% endif %}
+
+
+<div class="container">
+    {% if title %}
+    <h3>{{ title.upper() }}</h3>  
+    {% endif %}  
+    <table class="table">
+        {% if table %}
+        <tr>
+            {% for header in table['head'] %}
+            <th>{{ header }}</th>
             {% endfor %}
-            {% endif %}
-        </table>
-    </div> 
+        </tr>
+        {% for row in table['rows'] %}
+        <tr>
+            {% for element in row %}
+            <td>{{ element }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </table>
+</div> 
 </body>
 </html>
