@@ -107,6 +107,12 @@
     <h3>{{ title.upper() }}</h3>  
     {% endif %}  
 
+    {% if images %}
+        {% for img in images %}
+            <img class="img-responsive" src="{{ img }}">
+        {% endfor %}
+    {% endif %}    
+
     {% if table %}
     <table class="table">
         <tr>
@@ -123,11 +129,7 @@
         {% endfor %}
     </table>
     {% endif %}
-    {% if images %}
-        {% for img in images %}
-            <img class="img-responsive" src="{{ img }}">
-        {% endfor %}
-    {% endif %}
+
 </div> 
 </body>
 </html>

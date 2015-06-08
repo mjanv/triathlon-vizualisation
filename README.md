@@ -5,4 +5,6 @@ The goal of this repository is to give scripting and software tools to triathlet
 
 All the data is extracted from the webpage of the individual challenge (maintained by Rillieux Triathlon Club) avalaible to this adress: http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php
 
-Requirements: Python (>2.7), Pandas, Matplotlib, BeautifulSoup
+Requirements: Python >2.7, Flask, Numpy/Scipy Pandas,  Matplotlib, BeautifulSoup
+
+Working beta version (not up to date to the repository) online at : http://mjanvier.pythonanywhere.com
