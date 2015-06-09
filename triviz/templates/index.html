@@ -13,19 +13,20 @@
 
 <body>
 
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">Triviz</a>
-      </div>
-      <div>
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
-            <li><a href="http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php">TRICLAIR Challenge Webpage</a></li>
-            <li><a href="https://github.com/mjanv/triathlon-vizualisation">GitHub Project</a></li>
-        </ul>
+            <a class="navbar-brand" href="#">Triviz</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php">TRICLAIR Challenge Individuel</a></li>
+                <li><a href="https://github.com/mjanv/triathlon-vizualisation">GitHub Project</a></li>
+                <li><a href="http://guc.triathlon.free.fr/">GUC Triathlon</a></li>
+            </ul>
+        </div>
     </div>
-</div>
 </nav>    
 
 <div class="container">
@@ -33,10 +34,10 @@
     <div class="jumbotron">
         <p>Triviz permet de visualiser simplement et rapidement des données issus des résultats des triathlons FFTRI Rhône-Alpes depuis 2010. Il est possible d'afficher les listes de triathlons année par année, les résultats d'un triathlon ou le résumée individuel d'un triathlète sur un an. La base de données est extraite depuis le site web de Rillieux Triathlon. Projet maintenu par Janvier Maxime, sous licence MIT.</p>
     </div>
-  <div class="alert alert-warning">
-    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-    <strong>Attention !</strong> Le téléchargement des données peut prendre plusieurs secondes. Soyez patients. ;)
-  </div>
+    <div class="alert alert-warning">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>Attention !</strong> Le téléchargement des données peut prendre plusieurs secondes. Soyez patients. ;)
+    </div>
 </div>
 
 
@@ -56,14 +57,14 @@
     </div>
 </div> 
 
-{% if form %}
+{% if form_select_triathlon %}
 <div class="container"> 
     <div id="form">
         <form class="form-inline" action="/choosetriathlon" method="post">
             <legend>Afficher les données d'un triathlon</legend> 
             <div class="form-group">
                 <select class="form-control" name="tri">
-                    {% for l in form %}
+                    {% for l in form_select_triathlon %}
                     <option value="{{ l[0] }};{{ l[1] }}">{{ l[0] }}</option>
                     {% endfor %}
                 </select>
@@ -74,7 +75,7 @@
             </div>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Athlete</span>
-                <input type="text" class="form-control" name="name" placeholder="Name">
+                <input type="text" class="form-control" name="athlete" placeholder="Nom Prénom">
             </div>              
             <input type="submit" class="btn btn-default btn-sm" value="Launch">
         </form>
@@ -82,14 +83,14 @@
 </div> 
 {% endif %}
 
-{% if form2 %}
+{% if form_select_athlete %}
 <div class="container">
     <div id="form">
         <form class="form-inline" action="/chooseathlete" method="post">
             <legend>Afficher le résumé d'un triathlète</legend>  
             <div class="form-group">
                 <select class="form-control" name="athlete">
-                    {% for l in form2 %}
+                    {% for l in form_select_athlete %}
                     <option value="{{ l[0] }};{{ l[1] }};{{ year }}">{{ l[0] }}</option>
                     {% endfor %}
                 </select>
@@ -101,16 +102,15 @@
 </div>
 {% endif %}
 
-
 <div class="container">
     {% if title %}
     <h3>{{ title.upper() }}</h3>  
     {% endif %}  
 
     {% if images %}
-        {% for img in images %}
-            <img class="img-responsive" src="{{ img }}">
-        {% endfor %}
+    {% for img in images %}
+    <img class="img-responsive" src="{{ img }}">
+    {% endfor %}
     {% endif %}    
 
     {% if table %}
@@ -123,13 +123,13 @@
         {% for row in table['rows'] %}
         <tr>
             {% for element in row %}
-            <td>{{ element | format_table }}</td>
+            <td>{{ element | format_table | safe }}</td>
             {% endfor %}
         </tr>
         {% endfor %}
     </table>
     {% endif %}
-
 </div> 
+
 </body>
 </html>

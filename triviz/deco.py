@@ -9,24 +9,15 @@ from functools import wraps
 import inspect
 import os
 
-def echo(msg=''):
+def echo(msg='-'):
     def echo_inside(fn):
         def wrapped(*v, **k):
             if v[0].verbose:
-                print(":: Calling %s: %s" % (fn.__name__,msg))
+                print("* Calling %s: %s" % (fn.__name__,msg))
             return fn(*v, **k) 
         return wrapped
     return echo_inside
-
-def memo(fn):
-    cache = {}
-    @wraps(fn)
-    def wrap(*args):
-        if args not in cache:
-            cache[args] = fn(*args)
-        return cache[args]
-    return wrap 
-
+ 
 def save_hdf(name,*args):
     def save_inside(fn):
         def wrapped(*v,**k):

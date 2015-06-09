@@ -12,7 +12,9 @@ import matplotlib.pyplot as plt
 
 import urllib
 import bs4 as bs
+import datetime
 import re
+import os.path
 
 from deco import echo
 from utils import *
@@ -31,28 +33,31 @@ class TRICLAIRModele(object):
     _data_triathlon = {}
     _data_athletes = {}
 
-    def __init__(self,verbose=True):
+    def __init__(self,verbose=True,store_data='data/'):
         self.verbose = verbose
+        self.store_data = store_data
 
     @echo('Loading list of triathlons')
     def get_list_triathlons(self,year):
+        year = int(year)
         if year not in self._list_triathlons:
             self._list_triathlons[year] = self.__load_list_triathlons(year)
         return self._list_triathlons[year]
 
     @echo('Loading list of triathlons for each year')
     def get_list_all_triathlons(self):
-        return pd.concat([self.get_list_triathlons(year) for year in range(START_YEAR,datetime.today().year)])
+        return pd.concat([self.get_list_triathlons(year) for year in range(START_YEAR,datetime.datetime.today().year)])
 
     @echo('Loading ranking of athletes')
     def get_ranking_athletes(self,year):
+        year = int(year)
         if year not in self._ranking_athletes:
             self._ranking_athletes[year] = self.__load_ranking_athletes(year)
         return self._ranking_athletes[year]
 
     @echo('Loading ranking of athletes for each year') 
     def get_all_ranking_athletes(self,year):
-        return [(year,self.get_ranking_athletes(year)) for year in range(START_YEAR,datetime.today().year)]    
+        return [(year,self.get_ranking_athletes(year)) for year in range(START_YEAR,datetime.datetime.today().year)]    
 
     @echo('Loading data of athlete')
     def get_data_athlete(self,iden):
@@ -61,15 +66,23 @@ class TRICLAIRModele(object):
         return self._data_athletes[iden]    
 
     @echo('Loading data of triathlon')
-    def get_data_triathlon(self,link,year=0):
+    def get_data_triathlon(self,link):
         if link not in self._data_triathlon:
-            self._data_triathlon[link] = self.__load_data_triathlon(link,year)
+            self._data_triathlon[link] = self.__load_data_triathlon(link)
         return self._data_triathlon[link]               
 
     def __load_list_triathlons(self,year):
         """ Extract the table in the pages http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php?saison=[year]
             which resumes the date, name, format, and link of each triathlon of the specified year. Returns a Pandas DataFrame. """ 
-        if year not in range(START_YEAR,datetime.today().year):
+        file_name = self.store_data + 'list-triathlons-' + str(year) + '.csv'
+
+        if os.path.exists(file_name):
+            print('LALALALA')
+            return pd.read_csv(file_name,encoding='utf8',
+                            parse_dates=['date'], 
+                            date_parser=pd.to_datetime).drop('Unnamed: 0',axis=1)
+
+        if year not in range(START_YEAR,datetime.datetime.today().year):
             return None
 
         soup = self.__get_soup_webpage(BASE_URL + SEASON_URL + str(year))
@@ -81,12 +94,15 @@ class TRICLAIRModele(object):
              ) 
             for line in soup.find_all('a',href=True) if '-resultats-' in line.get('href')]
 
-        return pd.DataFrame(l,columns=['date','name','format','link'])
+        data = pd.DataFrame(l,columns=['date','name','format','link'])
+        if self.store_data:
+            data.to_csv(file_name, encoding='utf8')
+        return data
 
     def __load_ranking_athletes(self,year):
         """ Extract the main table in the pages http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php?saison=[year]
-            which resumes the rank, name, sex, club and number of points of each athlete. Returns a Pandas. """
-        if year not in range(START_YEAR,datetime.today().year):
+            which resumes the rank, name, sex, club and number of points of each athlete. Returns a Pandas. """  
+        if year not in range(START_YEAR,datetime.datetime.today().year):
             return None
 
         table = self.__get_soup_webpage(BASE_URL + SEASON_URL + str(year)).findAll('table')[2]
@@ -113,8 +129,17 @@ class TRICLAIRModele(object):
                 columns.setdefault(sec,[]).append(func(col.text)) # clean and append the data
         return pd.DataFrame(columns)
 
-    def __load_data_triathlon(self,link,year):
+    def __load_data_triathlon(self,link):
         """ TODO """
+        file_name = self.store_data + link.split('.')[0] + '.csv'
+
+        if os.path.exists(file_name):
+            return pd.read_csv(file_name,encoding='utf8',
+                            parse_dates=['Cap','Natation','Scratch','Velo'], 
+                            date_parser=pd.to_timedelta).drop('Unnamed: 0',axis=1)
+
+
+
         table = self.__get_soup_webpage(BASE_URL + link).findAll('table')[-1]
 
         entete = map(lambda x: x.text,table.find_all('tr')[0].find_all('th'))
@@ -157,7 +182,10 @@ class TRICLAIRModele(object):
                 data = float('nan')
                 columns[translation[sec]].append(data)  
 
-        return pd.DataFrame(columns)    
+        data = pd.DataFrame(columns)
+        if self.store_data:
+            data.to_csv(file_name, encoding='utf8')
+        return data  
 
     def __get_soup_webpage(self,link):
         try:

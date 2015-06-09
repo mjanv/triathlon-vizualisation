@@ -9,11 +9,11 @@ h1 {
 }
 
 img {
-border: 1px solid #DDD;
-border-radius: 4px;
-margin: 8px auto;
-padding:8px;
-background-color: #fff;
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    margin: 8px auto;
+    padding:8px;
+    background-color: #fff;
 }
 
 td,th {

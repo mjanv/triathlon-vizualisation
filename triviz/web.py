@@ -7,9 +7,12 @@ import modele
 import utils
 
 import time
-import pandas
+import numpy
+import datetime
+import pandas as pd
 
 app = Flask(__name__,static_url_path='/static')
+triviz = modele.TRICLAIRModele()
 
 @app.route('/')
 def render_index():
@@ -18,63 +21,87 @@ def render_index():
 @app.route('/chooseyear', methods = ['POST'])
 def chooseyear():
     year = int(request.form['year'])
-    #session['year'] = year
-    T = modele.TRICLAIRModele()
-    L = T.get_list_triathlons(year)
-    L2 = T.get_ranking_athletes(year)
-    table = dict()
-    table['head'] = L.keys().tolist()
-    table['rows'] = L.values.tolist()
-    A = map(lambda x: '  '.join(x),zip(L['name'].tolist(),L['format'].tolist()))
-    form = zip(A,L['link'].tolist())
-    form2 = zip(list(L2['name']),list(L2['id']))
-    return render_template('index.html',year=year, title="List of triathlons " + str(year),table=table,form=form,form2 = form2)
+
+    L = triviz.get_list_triathlons(year)
+    R = triviz.get_ranking_athletes(year)
+
+    form_select_triathlon = zip(map(lambda x: '  '.join(x),zip(L['name'].tolist(),L['format'].tolist())),L['link'].tolist())
+    form_select_athlete   = zip(R['name'].tolist(),R['id'].tolist())
+
+    return render_template('index.html',title="Liste des triathlons " + str(year),
+                                        year=year,
+                                        table=prepare_table(L),
+                                        form_select_triathlon=form_select_triathlon,
+                                        form_select_athlete = form_select_athlete)
 
 @app.route('/choosetriathlon', methods = ['POST'])
 def choosetriathlon():
-    name,link = request.form['tri'].split(';')
-    T = modele.TRICLAIRModele()
-    L = T.get_data_triathlon(link=link)
+    name_triathlon,link = request.form['tri'].split(';')
+    
+    L = triviz.get_data_triathlon(link)
 
-    #import pdb; pdb.set_trace();
     rank_max = int(request.form['max'] if request.form['max'] else len(L))
-    images = utils.plot_data_triathlon(0,rankings=L,head=rank_max,returnfig=True)
+    name = request.form['athlete'] if request.form['athlete'] else None   
+    print name
+    images = utils.plot_data_triathlon(L,head=rank_max,name_athlete=name,returnfig=True)
 
-    if request.form['max']:
-        L = L.head(int(request.form['max']))
-
-    table = dict()
-    table['head'] = L.keys().tolist()
-    table['rows'] = L.values.tolist()    
-
-    return render_template('index.html',title=name,table=table,images=images)
+    return render_template('index.html',title=name_triathlon,
+                                        table=prepare_table(L.head(rank_max)),
+                                        images=images)
 
 @app.route('/chooseathlete', methods = ['POST'])
-def choosetathlete():
-    name,iden,year = request.form['athlete'].split(';')
-    T = modele.TRICLAIRModele()
-    P = T.get_data_athlete(iden) 
-    L = T.get_list_triathlons(int(year))
-    links=sum([list(L['link'][(L['name']==course) & (L['format']==form)]) for course,form in zip(P['course'],P['format'])],[])
-    tris = [T.get_data_triathlon(l,int(year)) for l in links]
-    images = utils.plot_data_athlete(P,tris,name)
+def chooseathlete():
+    name_athlete,identifier,year = request.form['athlete'].split(';') 
 
+    D = triviz.get_data_athlete(identifier) 
+    L = triviz.get_list_triathlons(year) 
 
-    table = dict()
-    table['head'] = P.keys().tolist()
-    table['rows'] = P.values.tolist() 
+    links = sum([list(L['link'][(L['name']==course) & (L['format']==form)]) for course,form in zip(D['course'],D['format'])],[])
+    triathlons  = [triviz.get_data_triathlon(link) for link in links] 
+
+    resultats = []
+    for triathlon,name,format in zip(triathlons,D['course'],D['format']):
+        print name,format
+        tri = pd.concat([triathlon.loc[:,:'Sexe'],triathlon.loc[:,'Scratch':].apply(utils.normalize_col)],axis=1).dropna()
+        resultat = tri[ (tri['Nom']== name_athlete) | 
+                        (tri['Nom'] == ' '.join(name_athlete.split(' ',1)[::-1])) ]
+        if resultat.empty: 
+            resultat = pd.DataFrame(columns=resultat.columns,index=[0])
+        #print resultat  
+        #import pdb; pdb.set_trace();  
+        resultats.append(resultat.loc[:,'Scratch':].values[0].tolist())        
+    resultats = pd.concat([D['course'],pd.concat(resultats)],axis=1) 
+    resultats = resultats.reset_index().drop('index',axis=1).set_index('course') 
+
+    images = utils.plot_data_athlete(resultats) 
   
-    return render_template('index.html',title=name,table=table,images=images)      
+    return render_template('index.html',title=name,
+                                        table=prepare_table(resultats),
+                                        images=images)      
 
 @app.template_filter('format_table')
 def format_table(obj):
-    if isinstance(obj,pandas.tslib.Timestamp):  
-        return time.strftime('%d %B %Y',time.strptime(str(obj), "%Y-%m-%d %H:%M:%S"))
+    """ Jinja filter for formatting elements in <td></td> """
+    try:
+        if isinstance(obj,pd.tslib.Timestamp):  
+            return datetime.datetime.strptime(str(obj), "%Y-%m-%d %H:%M:%S").strftime('%d %B %Y')
 
-    if isinstance(obj,pandas.tslib.Timedelta):
-        return '%02d:%02d:%02d' % (obj.hours,obj.minutes,obj.seconds)
-            
-    return obj        
+        if isinstance(obj,pd.tslib.Timedelta):
+            return '%02d:%02d:%02d' % (obj.hours,obj.minutes,obj.seconds)
+
+        if isinstance(obj,numpy.timedelta64):
+            return obj.tolist()   
+
+        if '.htm' in obj:
+            link = 'http://www.triclair.com' + obj    
+            return '<a href="%s">%s</a>' % (link,link)
+                
+        return obj 
+    except:
+        return obj    
+
+def prepare_table(P):
+    return dict({ 'head': P.keys().tolist(), 'rows': P.values.tolist() })
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
