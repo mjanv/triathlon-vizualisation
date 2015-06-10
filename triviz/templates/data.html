@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% if title %}
+    <h2>{{ title.upper() }}</h2>  
+    {% endif %}  
+
+    {% for class,data in datas %}
+
+        {% if class=='image' %}
+        <img class="img-responsive" src="{{ data }}">
+        {% endif %}  
+
+        {% if class=='table' %}
+            <table class="table">
+                <tr>{% for header in data['head'] %}<th>{{ header.capitalize() }}</th>{% endfor %}</tr>
+                {% for row in data['rows'] %}
+                    <tr>{% for element in row %}<td>{{ element | format_table | safe }}</td>{% endfor %}</tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
+        {% if class =='text' %}
+        <div class="panel panel-default">
+            <div class="panel-body">{{ data }}</div>
+        </div>
+        {% endif %}
+
+    {% endfor %}
+
+</div> 
+
+{% endblock %}
