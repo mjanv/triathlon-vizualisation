@@ -67,16 +67,13 @@ def chooseathlete():
                         (tri['Nom'] == ' '.join(name_athlete.split(' ',1)[::-1])) ]
         if resultat.empty: 
             resultat = pd.DataFrame(columns=resultat.columns,index=[0])
-        #print resultat  
-        #import pdb; pdb.set_trace();  
-        resultats.append(resultat.loc[:,'Scratch':].values[0].tolist())        
-    resultats = pd.concat([D['course'],pd.concat(resultats)],axis=1) 
-    resultats = resultats.reset_index().drop('index',axis=1).set_index('course') 
+        resultats.append(resultat.loc[:,['Place','Scratch','Natation','Velo','Cap']].values[0].tolist())        
+    resultats = pd.concat([D['course'],pd.DataFrame(resultats,columns=['Place','Scratch','Natation','Velo','Cap'])],axis=1)
 
-    images = utils.plot_data_athlete(resultats) 
+    images = utils.plot_data_athlete(resultats.set_index('course')) 
   
-    return render_template('index.html',title=name,
-                                        table=prepare_table(resultats),
+    return render_template('index.html',title=name_athlete,
+                                        table=prepare_table(resultats.applymap(lambda x: round(x) if isinstance(x,float) else x)),
                                         images=images)      
 
 @app.template_filter('format_table')

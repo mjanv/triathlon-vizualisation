@@ -117,7 +117,7 @@
     <table class="table">
         <tr>
             {% for header in table['head'] %}
-            <th>{{ header }}</th>
+            <th>{{ header.capitalize() }}</th>
             {% endfor %}
         </tr>
         {% for row in table['rows'] %}
