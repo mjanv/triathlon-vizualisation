@@ -77,7 +77,7 @@ class TRICLAIRModele(object):
             which resumes the date, name, format, and link of each triathlon of the specified year. Returns a Pandas DataFrame. """ 
         file_name = self.store_data + 'list-triathlons-' + str(year) + '.csv'
 
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and not self.online_version:
             return pd.read_csv(file_name,encoding='utf8',
                             parse_dates=['date'], 
                             date_parser=pd.to_datetime).drop('Unnamed: 0',axis=1)
@@ -95,7 +95,7 @@ class TRICLAIRModele(object):
             for line in soup.find_all('a',href=True) if '-resultats-' in line.get('href')]
 
         data = pd.DataFrame(l,columns=['date','name','format','link'])
-        if self.store_data:
+        if self.store_data and not self.online_version:
             data.to_csv(file_name, encoding='utf8')
         return data
 
@@ -133,7 +133,7 @@ class TRICLAIRModele(object):
         """ TODO """
         file_name = self.store_data + link.split('.')[0] + '.csv'
 
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and not self.online_version:
             return pd.read_csv(file_name,encoding='utf8',
                             parse_dates=['Cap','Natation','Scratch','Velo'], 
                             date_parser=pd.to_timedelta).drop('Unnamed: 0',axis=1)
@@ -183,7 +183,7 @@ class TRICLAIRModele(object):
                 columns[translation[sec]].append(data)  
 
         data = pd.DataFrame(columns)
-        if self.store_data:
+        if self.store_data and not self.online_version:
             data.to_csv(file_name, encoding='utf8')
         return data  
 
