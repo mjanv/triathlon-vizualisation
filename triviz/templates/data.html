@@ -8,6 +8,10 @@
 
     {% for class,data in datas %}
 
+        {% if class=='title' %}
+        <h3>{{ data | safe }}</h3>
+        {% endif %}
+
         {% if class=='image' %}
         <img class="img-responsive" src="{{ data }}">
         {% endif %}  

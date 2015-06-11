@@ -18,9 +18,9 @@ triviz = modele.TRICLAIRModele(online_version=False)
 def render_index():
     return render_template('index.html')
 
-@app.route('/chooseyear', methods = ['POST'])
+@app.route('/chooseyear', methods = ['POST','GET'])
 def chooseyear():
-    year = int(request.form['year'])
+    year = int(request.form['year']) if request.method == 'POST' else request.args.get('year')
 
     L = triviz.get_list_triathlons(year)
     R = triviz.get_ranking_athletes(year)
@@ -33,6 +33,28 @@ def chooseyear():
                                         table=prepare_table(L),
                                         form_select_triathlon=form_select_triathlon,
                                         form_select_athlete = form_select_athlete)
+
+@app.route('/chooseallyears', methods = ['POST'])
+def chooseallyears():
+
+    L = [triviz.get_list_triathlons(year) for year in range(2010,2015)]
+    R = [triviz.get_ranking_athletes(year) for year in range(2010,2015)]
+
+    names = reduce(lambda x,y: set(x).union(set(y)),[r['name'][r['points']>15000] for r in R])
+
+    datas = []
+    for name in names:
+        datas = datas + [('title',name)]
+        tab = pd.DataFrame(columns=R[0].keys(),index=[0])
+        for year,r in zip(range(2010,2015),R):
+            new_line = r[r['name']==name]
+            if not new_line.empty:
+                new_line['id'] = '<a href="/chooseathlete?id=%d&name=%s&year=%d">Lien</a>'% (int(new_line['id'].values[0]),name,year)
+            tab = pd.concat([tab,new_line])
+        tab.drop('name',axis=1,inplace=True)
+        datas = datas + [('table',prepare_table(tab))]
+
+    return render_template('data.html',title="...",datas=datas)
 
 @app.route('/choosetriathlon', methods = ['POST'])
 def choosetriathlon():
@@ -49,9 +71,14 @@ def choosetriathlon():
 
     return render_template('data.html',title=name_triathlon,datas=datas)
 
-@app.route('/chooseathlete', methods = ['POST'])
+@app.route('/chooseathlete', methods = ['POST','GET'])
 def chooseathlete():
-    name_athlete,identifier,year = request.form['athlete'].split(';') 
+    if request.method == 'POST':
+        name_athlete,identifier,year = request.form['athlete'].split(';') 
+    else:
+         name_athlete = request.args.get('name')
+         identifier = request.args.get('id')
+         year = request.args.get('year')   
 
     D = triviz.get_data_athlete(identifier) 
     L = triviz.get_list_triathlons(year) 
