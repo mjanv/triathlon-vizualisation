@@ -33,9 +33,10 @@ class TRICLAIRModele(object):
     _data_triathlon = {}
     _data_athletes = {}
 
-    def __init__(self,verbose=True,store_data='data/'):
+    def __init__(self,verbose=True,store_data='data/',online_version=False):
         self.verbose = verbose
         self.store_data = store_data
+        self.online_version = online_version
 
     @echo('Loading list of triathlons')
     def get_list_triathlons(self,year):
@@ -77,7 +78,6 @@ class TRICLAIRModele(object):
         file_name = self.store_data + 'list-triathlons-' + str(year) + '.csv'
 
         if os.path.exists(file_name):
-            print('LALALALA')
             return pd.read_csv(file_name,encoding='utf8',
                             parse_dates=['date'], 
                             date_parser=pd.to_datetime).drop('Unnamed: 0',axis=1)

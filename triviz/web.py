@@ -12,7 +12,7 @@ import datetime
 import pandas as pd
 
 app = Flask(__name__,static_url_path='/static')
-triviz = modele.TRICLAIRModele()
+triviz = modele.TRICLAIRModele(online_version=False)
 
 @app.route('/')
 def render_index():
@@ -36,7 +36,6 @@ def chooseyear():
 
 @app.route('/choosetriathlon', methods = ['POST'])
 def choosetriathlon():
-    datas = []
     name_triathlon,link = request.form['tri'].split(';')
     
     L = triviz.get_data_triathlon(link)
@@ -45,14 +44,13 @@ def choosetriathlon():
     name = request.form['athlete'] if request.form['athlete'] else None   
     images = utils.plot_data_triathlon(L,head=rank_max,name_athlete=name,returnfig=True)
 
-    datas = datas + [('image',im) for im in images]
-    datas = datas.append(('table',prepare_table(L.head(rank_max))))
+    datas = [('image',im) for im in images]
+    datas = datas + [('table',prepare_table(L.head(rank_max)))]
 
     return render_template('data.html',title=name_triathlon,datas=datas)
 
 @app.route('/chooseathlete', methods = ['POST'])
 def chooseathlete():
-    datas = []
     name_athlete,identifier,year = request.form['athlete'].split(';') 
 
     D = triviz.get_data_athlete(identifier) 
@@ -77,12 +75,10 @@ def chooseathlete():
     for c in ['Scratch','Natation','Velo','Cap']:
         df[c] = df[c].apply(lambda x: ('%03d%%' % int(x)) if not numpy.isnan(x) else 'Non connu')
 
-    datas = datas + [('image',im[:100]) for im in images]
-    datas = datas + [('table',prepare_table(df))]
-    import pdb; pdb.set_trace()   
-    print datas    
+    datas = [('image',im) for im in images]
+    datas = datas + [('table',prepare_table(df))]  
  
-    return render_template('data.html',title=name_athlete,datas=D)     
+    return render_template('data.html',title=name_athlete,datas=datas)     
 
 @app.template_filter('format_table')
 def format_table(obj):
