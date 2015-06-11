@@ -1,39 +1,14 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}   
 
-<head>
-    <title>Triviz</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="static/css/bootstrap.min.css" >
-    <link rel="stylesheet" href="static/css/style.css" >
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
-</head>
 
-<body>
-
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Triviz</a>
-        </div>
-        <div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php">TRICLAIR Challenge Individuel</a></li>
-                <li><a href="https://github.com/mjanv/triathlon-vizualisation">GitHub Project</a></li>
-                <li><a href="http://guc.triathlon.free.fr/">GUC Triathlon</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>    
-
+{% block content %}
 <div class="container">
     <h1>TRIVIZ : Data Visualization for Triathletes</h1>
-    <div class="jumbotron">
-        <p>Triviz permet de visualiser simplement et rapidement des données issus des résultats des triathlons FFTRI Rhône-Alpes depuis 2010. Il est possible d'afficher les listes de triathlons année par année, les résultats d'un triathlon ou le résumée individuel d'un triathlète sur un an. La base de données est extraite depuis le site web de Rillieux Triathlon. Projet maintenu par Janvier Maxime, sous licence MIT.</p>
-    </div>
+    <div class="panel panel-default">
+  <div class="panel-heading"></div>
+  <div class="panel-body">Triviz permet de visualiser simplement et rapidement des données issus des résultats des triathlons FFTRI Rhône-Alpes depuis 2010. Il est possible d'afficher les listes de triathlons année par année, les résultats d'un triathlon ou le résumée individuel d'un triathlète sur un an. La base de données est extraite depuis le site web de Rillieux Triathlon. Projet maintenu par Janvier Maxime, sous licence MIT</div>
+</div>
+
     <div class="alert alert-warning">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         <strong>Attention !</strong> Le téléchargement des données peut prendre plusieurs secondes. Soyez patients. ;)
@@ -90,8 +65,8 @@
             <legend>Afficher le résumé d'un triathlète</legend>  
             <div class="form-group">
                 <select class="form-control" name="athlete">
-                    {% for l in form_select_athlete %}
-                    <option value="{{ l[0] }};{{ l[1] }};{{ year }}">{{ l[0] }}</option>
+                    {% for name,id in form_select_athlete | dictsort %}
+                    <option value="{{ name }};{{ id }};{{ year }}">{{ name | title }}</option>
                     {% endfor %}
                 </select>
             </div>  
@@ -102,34 +77,4 @@
 </div>
 {% endif %}
 
-<div class="container">
-    {% if title %}
-    <h3>{{ title.upper() }}</h3>  
-    {% endif %}  
-
-    {% if images %}
-    {% for img in images %}
-    <img class="img-responsive" src="{{ img }}">
-    {% endfor %}
-    {% endif %}    
-
-    {% if table %}
-    <table class="table">
-        <tr>
-            {% for header in table['head'] %}
-            <th>{{ header.capitalize() }}</th>
-            {% endfor %}
-        </tr>
-        {% for row in table['rows'] %}
-        <tr>
-            {% for element in row %}
-            <td>{{ element | format_table | safe }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
-</div> 
-
-</body>
-</html>
+{% endblock %}

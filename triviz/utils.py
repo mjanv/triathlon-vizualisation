@@ -66,7 +66,7 @@ def plot_data_triathlon(rankings,head=None,name_athlete=None,filters=None,return
     plt.style.use('ggplot')
 
     # Plot Correlation beetween Variable
-    fig, axes = plt.subplots(ncols=3, nrows=2,figsize=(12,8), dpi=200); axes = axes.ravel()
+    fig, axes = plt.subplots(ncols=3, nrows=2,figsize=(12,8)); axes = axes.ravel()
     fig.tight_layout(pad=4.0, w_pad=4.0, h_pad=4.0)
     cl  = cm.get_cmap('gist_rainbow',6)
 
@@ -86,11 +86,12 @@ def plot_data_triathlon(rankings,head=None,name_athlete=None,filters=None,return
     figs.append(create_img(fig))
 
     # Plot Histogram distributions
-    fig, axes = plt.subplots(ncols=2, nrows=2,figsize=(10,10), dpi=200); axes = axes.ravel()
+    fig, axes = plt.subplots(ncols=2, nrows=2,figsize=(10,10)); axes = axes.ravel()
     for ind, title in enumerate(['Scratch','Natation','Velo','Cap']):
         data = rankings[title]
         (mu,sigma) = norm.fit(data)
-        n, bins, patches = axes[ind].hist(data, nb_athletes/10, facecolor=cl(ind), alpha=0.7)
+        #nbins = round((max(data)-min(data))/(2*(np.percentile(data,0.75)-np.percentile(data,0.25))*len(data)**(-1.0/3)))
+        n, bins, patches = axes[ind].hist(data,nb_athletes/10, facecolor=cl(ind), alpha=0.7)
         if name_athlete is not None:
             axes[ind].axvline(resultat[title].values[0],color='red',linestyle='dashed')
         axes[ind].plot(bins, max(bins)*mlab.normpdf(bins, mu, sigma), '-',color='gray', linewidth=4,label=r'$\mu=%.3f,\ \sigma=%.3f$' %(mu, sigma))
@@ -101,7 +102,7 @@ def plot_data_triathlon(rankings,head=None,name_athlete=None,filters=None,return
     figs.append(create_img(fig))
     
     # Plot Scratch Rankings 
-    fig = plt.figure(figsize=(10,10), dpi=200)
+    fig = plt.figure(figsize=(10,10))
     ax = fig.add_subplot(111)
     plt.plot(rankings['Scratch'],'y')
     if name_athlete is not None:
@@ -124,9 +125,10 @@ def plot_data_athlete(resultats):
     ax.right_ax.set_ylabel('Classement')
     figs.append(create_img(ax.get_figure()))
 
-    ax = resultats.plot(kind='box',use_index=True,secondary_y=['Place'],figsize=(12,12))
-    plt.ylabel('Temps (% vainqueur)')
-    figs.append(create_img(ax.get_figure()))    
+    # --> Disabled because of the older version of pandas on PyAny which does not support 'box' option
+        #ax = resultats.plot(kind='box',use_index=True,secondary_y=['Place'],figsize=(12,12))
+        #plt.ylabel('Temps (% vainqueur)')
+        #figs.append(create_img(ax.get_figure()))    
 
     return figs
            

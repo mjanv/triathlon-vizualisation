@@ -12,7 +12,7 @@ import datetime
 import pandas as pd
 
 app = Flask(__name__,static_url_path='/static')
-triviz = modele.TRICLAIRModele()
+triviz = modele.TRICLAIRModele(online_version=False)
 
 @app.route('/')
 def render_index():
@@ -26,7 +26,7 @@ def chooseyear():
     R = triviz.get_ranking_athletes(year)
 
     form_select_triathlon = zip(map(lambda x: '  '.join(x),zip(L['name'].tolist(),L['format'].tolist())),L['link'].tolist())
-    form_select_athlete   = zip(R['name'].tolist(),R['id'].tolist())
+    form_select_athlete   = dict(zip(R['name'].tolist(),R['id'].tolist()))
 
     return render_template('index.html',title="Liste des triathlons " + str(year),
                                         year=year,
@@ -42,12 +42,12 @@ def choosetriathlon():
 
     rank_max = int(request.form['max'] if request.form['max'] else len(L))
     name = request.form['athlete'] if request.form['athlete'] else None   
-    print name
     images = utils.plot_data_triathlon(L,head=rank_max,name_athlete=name,returnfig=True)
 
-    return render_template('index.html',title=name_triathlon,
-                                        table=prepare_table(L.head(rank_max)),
-                                        images=images)
+    datas = [('image',im) for im in images]
+    datas = datas + [('table',prepare_table(L.head(rank_max)))]
+
+    return render_template('data.html',title=name_triathlon,datas=datas)
 
 @app.route('/chooseathlete', methods = ['POST'])
 def chooseathlete():
@@ -60,8 +60,7 @@ def chooseathlete():
     triathlons  = [triviz.get_data_triathlon(link) for link in links] 
 
     resultats = []
-    for triathlon,name,format in zip(triathlons,D['course'],D['format']):
-        print name,format
+    for triathlon,name,forma in zip(triathlons,D['course'],D['format']):
         tri = pd.concat([triathlon.loc[:,:'Sexe'],triathlon.loc[:,'Scratch':].apply(utils.normalize_col)],axis=1).dropna()
         resultat = tri[ (tri['Nom']== name_athlete) | 
                         (tri['Nom'] == ' '.join(name_athlete.split(' ',1)[::-1])) ]
@@ -70,11 +69,16 @@ def chooseathlete():
         resultats.append(resultat.loc[:,['Place','Scratch','Natation','Velo','Cap']].values[0].tolist())        
     resultats = pd.concat([D['course'],pd.DataFrame(resultats,columns=['Place','Scratch','Natation','Velo','Cap'])],axis=1)
 
-    images = utils.plot_data_athlete(resultats.set_index('course')) 
-  
-    return render_template('index.html',title=name_athlete,
-                                        table=prepare_table(resultats.applymap(lambda x: round(x) if isinstance(x,float) else x)),
-                                        images=images)      
+    images = utils.plot_data_athlete(resultats.set_index('course'))
+    df = resultats
+    df['Place'] = df['Place'].apply(lambda x: str(int(x)) if not numpy.isnan(x) else 'Non connu')
+    for c in ['Scratch','Natation','Velo','Cap']:
+        df[c] = df[c].apply(lambda x: ('%03d%%' % int(x)) if not numpy.isnan(x) else 'Non connu')
+
+    datas = [('image',im) for im in images]
+    datas = datas + [('table',prepare_table(df))]  
+ 
+    return render_template('data.html',title=name_athlete,datas=datas)     
 
 @app.template_filter('format_table')
 def format_table(obj):
@@ -99,6 +103,7 @@ def format_table(obj):
 
 def prepare_table(P):
     return dict({ 'head': P.keys().tolist(), 'rows': P.values.tolist() })
+
 
 if __name__ == "__main__":
     app.run(debug=True)
