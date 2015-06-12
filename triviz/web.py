@@ -11,6 +11,8 @@ import numpy
 import datetime
 import pandas as pd
 
+from collections import Counter
+
 app = Flask(__name__,static_url_path='/static')
 triviz = modele.TRICLAIRModele(online_version=False)
 
@@ -37,21 +39,35 @@ def chooseyear():
 @app.route('/chooseallyears', methods = ['POST'])
 def chooseallyears():
 
-    #L = [triviz.get_list_triathlons(year) for year in range(2010,2015)]
+    L = [triviz.get_list_triathlons(year) for year in range(2010,2015)]
     R = [triviz.get_ranking_athletes(year) for year in range(2010,2015)]
 
-    names = reduce(lambda x,y: set(x).union(set(y)),[r['name'][r['points']>8000] for r in R])
 
     datas = []
+
+    datas = datas + [('title',"Les 20 clubs les plus actifs entre 2010 et 2014")]
+    C = Counter(sum([list(r['club']) for r in R],[])).most_common()[:20]
+    tab = dict({'head':['club','nombre de triathletes'],'rows':C})
+    datas = datas + [('table',tab)]
+
+    datas = datas + [('title',"Tous les triathletes au dessus de 8000 points")]
+    names = reduce(lambda x,y: set(x).union(set(y)),[r['name'][r['points']>8000] for r in R])
     template = '<a href="/chooseathlete?id=%d&name=%s&year=%d">%s</a><br \> Position: %d (%d points)'
     tab = pd.DataFrame(columns=['name','2010','2011','2012','2013','2014'],index=[0])
     for ind,name in enumerate(names):
         R_name = [r[r['name']==name] for r in R]
         tab.loc[ind]= [name] + [template % (r['id'].values[0],name,year,r['club'].values[0],r['ranking'].values[0],r['points'].values[0]) if not r.empty else '' for year,r in zip(range(2010,2015),R_name)]
-        
-    datas = datas + [('table',prepare_table(tab))]    
+    datas = datas + [('table',prepare_table(tab))]   
 
-    return render_template('data.html',title="Tous les triathletes au dessus de 8000 points",datas=datas)
+    datas = datas + [('title',"Les triathlons Rhone-Alpes entre 2010 et 2014")]
+    for l in L:
+        l = l.drop(['link'],axis=1)
+        tab = prepare_table(l)
+        datas = datas + [('table',tab)]
+
+ 
+
+    return render_template('data.html',title="",datas=datas)
 
 @app.route('/choosetriathlon', methods = ['POST','GET'])
 def choosetriathlon():
@@ -127,7 +143,7 @@ def format_table(obj):
     """ Jinja filter for formatting elements in <td></td> """
     try:
         if isinstance(obj,pd.tslib.Timestamp):  
-            return datetime.datetime.strptime(str(obj), "%Y-%m-%d %H:%M:%S").strftime('%d %B %Y')
+            return datetime.datetime.strptime(str(obj), "%Y-%m-%d %H:%M:%S").strftime('%d/%m/%Y')
 
         if isinstance(obj,pd.tslib.Timedelta):
             return '%02d:%02d:%02d' % (obj.hours,obj.minutes,obj.seconds)
