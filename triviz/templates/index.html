@@ -29,19 +29,22 @@
                 <input type="submit" class="btn btn-primary btn-lg disabled" name="year" value="2015">
             </div>
         </form>    
+    </div>
+    <div id="form">    
         <form action="/chooseallyears" method="post">
+            <legend>Choisir une année</legend>
             <div class="btn-group">
                 <input type="submit" class="btn btn-danger btn-lg" name="allyears" value="2010 à 2014">
             </div>            
-        </form>
-    </div>
+        </form> 
+    </div>           
 </div> 
 
 {% if form_select_triathlon %}
 <div class="container"> 
     <div id="form">
         <form class="form-inline" action="/choosetriathlon" method="post">
-            <legend>Afficher les données d'un triathlon</legend> 
+            <legend>Afficher les données d'un triathlon de {{ year }}</legend> 
             <div class="form-group">
                 <select class="form-control" name="tri">
                     {% for l in form_select_triathlon %}
@@ -67,7 +70,7 @@
 <div class="container">
     <div id="form">
         <form class="form-inline" action="/chooseathlete" method="post">
-            <legend>Afficher le résumé d'un triathlète</legend>  
+            <legend>Afficher le résumé d'un triathlète en {{ year }}</legend>  
             <div class="form-group">
                 <select class="form-control" name="athlete">
                     {% for name,id in form_select_athlete | dictsort %}

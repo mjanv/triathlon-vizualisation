@@ -37,39 +37,50 @@ def chooseyear():
 @app.route('/chooseallyears', methods = ['POST'])
 def chooseallyears():
 
-    L = [triviz.get_list_triathlons(year) for year in range(2010,2015)]
+    #L = [triviz.get_list_triathlons(year) for year in range(2010,2015)]
     R = [triviz.get_ranking_athletes(year) for year in range(2010,2015)]
 
-    names = reduce(lambda x,y: set(x).union(set(y)),[r['name'][r['points']>15000] for r in R])
+    names = reduce(lambda x,y: set(x).union(set(y)),[r['name'][r['points']>10000] for r in R])
 
     datas = []
+    #tab = pd.DataFrame(columns=['name'] + range(2010,2015),index=[0])
     for name in names:
         datas = datas + [('title',name)]
-        tab = pd.DataFrame(columns=R[0].keys(),index=[0])
+        tab = pd.DataFrame(columns=R[0].keys())
         for year,r in zip(range(2010,2015),R):
             new_line = r[r['name']==name]
             if not new_line.empty:
-                new_line['id'] = '<a href="/chooseathlete?id=%d&name=%s&year=%d">Lien</a>'% (int(new_line['id'].values[0]),name,year)
-            tab = pd.concat([tab,new_line])
-        tab.drop('name',axis=1,inplace=True)
-        datas = datas + [('table',prepare_table(tab))]
+                new_line['id'] = '<a href="/chooseathlete?id=%d&name=%s&year=%d">%d</a>'% (int(new_line['id'].values[0]),name,year,year)
+                tab = new_line if tab.empty else pd.concat([tab,new_line])
+        tab = tab.drop(['name','sex'],axis=1)
+        datas = datas + [('table',prepare_table(tab))]    
 
     return render_template('data.html',title="...",datas=datas)
 
-@app.route('/choosetriathlon', methods = ['POST'])
+@app.route('/choosetriathlon', methods = ['POST','GET'])
 def choosetriathlon():
-    name_triathlon,link = request.form['tri'].split(';')
-    
+    if request.method == 'POST':
+        name_triathlon,link = request.form['tri'].split(';')
+        max_request = request.form['max']
+        athlete = request.form['athlete']
+    else:    
+        name_triathlon = request.args.get('tri')
+        link = request.args.get('link')
+        max_request = request.args.get('max')
+        athlete = request.args.get('athlete')        
+    print name_triathlon,max_request,link,athlete
     L = triviz.get_data_triathlon(link)
 
-    rank_max = int(request.form['max'] if request.form['max'] else len(L))
-    name = request.form['athlete'] if request.form['athlete'] else None   
+    rank_max = int(max_request if max_request else len(L))
+    name = athlete if athlete else None   
     images = utils.plot_data_triathlon(L,head=rank_max,name_athlete=name,returnfig=True)
 
     datas = [('image',im) for im in images]
     datas = datas + [('table',prepare_table(L.head(rank_max)))]
 
-    return render_template('data.html',title=name_triathlon,datas=datas)
+    title = (name_triathlon + ' [' + athlete + ']') if athlete else name_triathlon
+
+    return render_template('data.html',title=title ,datas=datas)
 
 @app.route('/chooseathlete', methods = ['POST','GET'])
 def chooseathlete():
