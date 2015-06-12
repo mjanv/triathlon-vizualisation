@@ -48,7 +48,7 @@ def convert_timedelta(td):
     else:
         return float('nan')          
 
-def plot_data_triathlon(rankings,head=None,name_athlete=None,filters=None,returnfig=False):
+def plot_data_triathlon(rankings,head=None,name_athlete=None,filters=None):
     """ Plot interesting data about triathlon """
 
     nb_athletes = len(rankings)
@@ -110,25 +110,27 @@ def plot_data_triathlon(rankings,head=None,name_athlete=None,filters=None,return
     ax.set_xlabel('Classement'); ax.set_ylabel('Temps scratch (% vainqueur)')
     figs.append(create_img(fig))
     
-    if returnfig:
-        return figs
-    else:   
-        plt.show()  
+    return figs
+
 
 def plot_data_athlete(resultats):  
     plt.style.use('ggplot')
     figs = []
 
-    ax = resultats.plot(ylim=(90,round(np.nanmax(map(np.nanmax,resultats.values)))),kind='bar',rot=90,secondary_y=['Place'],figsize=(12,12))
+    ax = resultats.plot(ylim=(90,round(np.nanmax(map(np.nanmax,resultats.values)))),kind='bar',rot=90,secondary_y=['Place'],figsize=(12,24))
     plt.tight_layout(pad=2.0, w_pad=2.0, h_pad=2.0)
     ax.set_ylabel('Temps (% vainqueur)')
     ax.right_ax.set_ylabel('Classement')
+    ax.set_xlabel('Histogramme des classements et temps scratch de la saison')
     figs.append(create_img(ax.get_figure()))
 
-    # --> Disabled because of the older version of pandas on PyAny which does not support 'box' option
-        #ax = resultats.plot(kind='box',use_index=True,secondary_y=['Place'],figsize=(12,12))
-        #plt.ylabel('Temps (% vainqueur)')
-        #figs.append(create_img(ax.get_figure()))    
+    fig = plt.figure(figsize=(8,8))
+    ax = fig.add_subplot(111)
+    bp = ax.boxplot(resultats.loc[:,'Scratch':].values)
+    ax.set_xticklabels(resultats.keys()[1:])
+    ax.set_ylabel('Temps (% vainqueur)')
+    ax.set_xlabel('Boîte à moustaches (Box plot) de la saison')
+    figs.append(create_img(fig))  
 
     return figs
            

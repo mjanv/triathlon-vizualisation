@@ -69,7 +69,7 @@ def choosetriathlon():
 
     rank_max = int(max_request if max_request else len(L))
     name = athlete if athlete else None   
-    images = utils.plot_data_triathlon(L,head=rank_max,name_athlete=name,returnfig=True)
+    images = utils.plot_data_triathlon(L,head=rank_max,name_athlete=name)
 
     datas = [('image',im) for im in images]
     datas = datas + [('table',prepare_table(L.head(rank_max)))]
@@ -103,12 +103,15 @@ def chooseathlete():
                     ]
         if resultat.empty: 
             resultat = pd.DataFrame(columns=resultat.columns,index=[0])
-        resultats.append(resultat.loc[:,['Place','Scratch','Natation','Velo','Cap']].values[0].tolist())        
+        resultats.append(resultat.loc[:,['Place','Scratch','Natation','Velo','Cap']].values[0].tolist())     
+    D['course'] = D['course'] + ' ' +  D['format'] 
+    D['liens'] = ['<a href="http://www.triclair.com%s">Classement</a> - <a href="/choosetriathlon?&tri=%s&link=%s&athlete=%s">Analyse</a>' 
+                    % (l,c,l,name_athlete) for c,l in zip(D['course'],links)]     
     resultats = pd.concat([D['course'],pd.DataFrame(resultats,columns=['Place','Scratch','Natation','Velo','Cap'])],axis=1)
 
 
     images = utils.plot_data_athlete(resultats.set_index('course'))
-    df = resultats
+    df = pd.concat([resultats,D['liens']],axis=1)
     df['Place'] = df['Place'].apply(lambda x: str(int(x)) if not numpy.isnan(x) else 'Non connu')
     for c in ['Scratch','Natation','Velo','Cap']:
         df[c] = df[c].apply(lambda x: ('%03d%%' % int(x)) if not numpy.isnan(x) else 'Non connu')
@@ -117,7 +120,7 @@ def chooseathlete():
     datas = [('image',im) for im in images]
     datas = datas + [('table',prepare_table(df))]  
  
-    return render_template('data.html',title=name_athlete,datas=datas)     
+    return render_template('data.html',title= ' - '.join((name_athlete,str(year))),datas=datas)     
 
 @app.template_filter('format_table')
 def format_table(obj):
@@ -132,9 +135,10 @@ def format_table(obj):
         if isinstance(obj,numpy.timedelta64):
             return obj.tolist()   
 
-        if '.htm' in obj:
-            link = 'http://www.triclair.com' + obj    
-            return '<a href="%s">%s</a>' % (link,link)
+        if isinstance(obj,str):
+            if obj.endswith('.htm'):    
+                link = 'http://www.triclair.com' + obj    
+                return '<a href="%s">%s</a>' % (link,link)
                 
         return obj 
     except:
