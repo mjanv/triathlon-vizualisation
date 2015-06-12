@@ -40,22 +40,18 @@ def chooseallyears():
     #L = [triviz.get_list_triathlons(year) for year in range(2010,2015)]
     R = [triviz.get_ranking_athletes(year) for year in range(2010,2015)]
 
-    names = reduce(lambda x,y: set(x).union(set(y)),[r['name'][r['points']>10000] for r in R])
+    names = reduce(lambda x,y: set(x).union(set(y)),[r['name'][r['points']>8000] for r in R])
 
     datas = []
-    #tab = pd.DataFrame(columns=['name'] + range(2010,2015),index=[0])
-    for name in names:
-        datas = datas + [('title',name)]
-        tab = pd.DataFrame(columns=R[0].keys())
-        for year,r in zip(range(2010,2015),R):
-            new_line = r[r['name']==name]
-            if not new_line.empty:
-                new_line['id'] = '<a href="/chooseathlete?id=%d&name=%s&year=%d">%d</a>'% (int(new_line['id'].values[0]),name,year,year)
-                tab = new_line if tab.empty else pd.concat([tab,new_line])
-        tab = tab.drop(['name','sex'],axis=1)
-        datas = datas + [('table',prepare_table(tab))]    
+    template = '<a href="/chooseathlete?id=%d&name=%s&year=%d">%s</a><br \> Position: %d (%d points)'
+    tab = pd.DataFrame(columns=['name','2010','2011','2012','2013','2014'],index=[0])
+    for ind,name in enumerate(names):
+        R_name = [r[r['name']==name] for r in R]
+        tab.loc[ind]= [name] + [template % (r['id'].values[0],name,year,r['club'].values[0],r['ranking'].values[0],r['points'].values[0]) if not r.empty else '' for year,r in zip(range(2010,2015),R_name)]
+        
+    datas = datas + [('table',prepare_table(tab))]    
 
-    return render_template('data.html',title="...",datas=datas)
+    return render_template('data.html',title="Tous les triathletes au dessus de 8000 points",datas=datas)
 
 @app.route('/choosetriathlon', methods = ['POST','GET'])
 def choosetriathlon():
