@@ -18,9 +18,9 @@ triviz = modele.TRICLAIRModele(online_version=False)
 def render_index():
     return render_template('index.html')
 
-@app.route('/chooseyear', methods = ['POST'])
+@app.route('/chooseyear', methods = ['POST','GET'])
 def chooseyear():
-    year = int(request.form['year'])
+    year = int(request.form['year']) if request.method == 'POST' else request.args.get('year')
 
     L = triviz.get_list_triathlons(year)
     R = triviz.get_ranking_athletes(year)
@@ -34,24 +34,58 @@ def chooseyear():
                                         form_select_triathlon=form_select_triathlon,
                                         form_select_athlete = form_select_athlete)
 
-@app.route('/choosetriathlon', methods = ['POST'])
+@app.route('/chooseallyears', methods = ['POST'])
+def chooseallyears():
+
+    #L = [triviz.get_list_triathlons(year) for year in range(2010,2015)]
+    R = [triviz.get_ranking_athletes(year) for year in range(2010,2015)]
+
+    names = reduce(lambda x,y: set(x).union(set(y)),[r['name'][r['points']>8000] for r in R])
+
+    datas = []
+    template = '<a href="/chooseathlete?id=%d&name=%s&year=%d">%s</a><br \> Position: %d (%d points)'
+    tab = pd.DataFrame(columns=['name','2010','2011','2012','2013','2014'],index=[0])
+    for ind,name in enumerate(names):
+        R_name = [r[r['name']==name] for r in R]
+        tab.loc[ind]= [name] + [template % (r['id'].values[0],name,year,r['club'].values[0],r['ranking'].values[0],r['points'].values[0]) if not r.empty else '' for year,r in zip(range(2010,2015),R_name)]
+        
+    datas = datas + [('table',prepare_table(tab))]    
+
+    return render_template('data.html',title="Tous les triathletes au dessus de 8000 points",datas=datas)
+
+@app.route('/choosetriathlon', methods = ['POST','GET'])
 def choosetriathlon():
-    name_triathlon,link = request.form['tri'].split(';')
-    
+    if request.method == 'POST':
+        name_triathlon,link = request.form['tri'].split(';')
+        max_request = request.form['max']
+        athlete = request.form['athlete']
+    else:    
+        name_triathlon = request.args.get('tri')
+        link = request.args.get('link')
+        max_request = request.args.get('max')
+        athlete = request.args.get('athlete')        
+    print name_triathlon,max_request,link,athlete
     L = triviz.get_data_triathlon(link)
 
-    rank_max = int(request.form['max'] if request.form['max'] else len(L))
-    name = request.form['athlete'] if request.form['athlete'] else None   
+    rank_max = int(max_request if max_request else len(L))
+    name = athlete if athlete else None   
     images = utils.plot_data_triathlon(L,head=rank_max,name_athlete=name,returnfig=True)
 
     datas = [('image',im) for im in images]
     datas = datas + [('table',prepare_table(L.head(rank_max)))]
 
-    return render_template('data.html',title=name_triathlon,datas=datas)
+    title = (name_triathlon + ' [' + athlete + ']') if athlete else name_triathlon
 
-@app.route('/chooseathlete', methods = ['POST'])
+    return render_template('data.html',title=title ,datas=datas)
+
+@app.route('/chooseathlete', methods = ['POST','GET'])
 def chooseathlete():
-    name_athlete,identifier,year = request.form['athlete'].split(';') 
+    if request.method == 'POST':
+        name_athlete,identifier,year = request.form['athlete'].split(';') 
+    else:
+         name_athlete = request.args.get('name')
+         identifier = request.args.get('id')
+         year = request.args.get('year')   
 
     D = triviz.get_data_athlete(identifier) 
     L = triviz.get_list_triathlons(year) 
@@ -61,19 +95,24 @@ def chooseathlete():
 
     resultats = []
     for triathlon,name,forma in zip(triathlons,D['course'],D['format']):
-        tri = pd.concat([triathlon.loc[:,:'Sexe'],triathlon.loc[:,'Scratch':].apply(utils.normalize_col)],axis=1).dropna()
-        resultat = tri[ (tri['Nom']== name_athlete) | 
-                        (tri['Nom'] == ' '.join(name_athlete.split(' ',1)[::-1])) ]
+        tri = pd.concat([triathlon.loc[:,:'Sexe'],triathlon.loc[:,'Scratch':].apply(utils.normalize_col)],axis=1)
+        resultat = tri[ (tri['Nom'] == name_athlete) | 
+                        (tri['Nom'] == ' '.join(name_athlete.split(' ',1)[::-1])) |
+                        (tri['Nom'] == name_athlete.replace ("-", " ")) | 
+                        (tri['Nom'] == ' '.join(name_athlete.split(' ',1)[::-1]).replace ("-", " ")) 
+                    ]
         if resultat.empty: 
             resultat = pd.DataFrame(columns=resultat.columns,index=[0])
         resultats.append(resultat.loc[:,['Place','Scratch','Natation','Velo','Cap']].values[0].tolist())        
     resultats = pd.concat([D['course'],pd.DataFrame(resultats,columns=['Place','Scratch','Natation','Velo','Cap'])],axis=1)
+
 
     images = utils.plot_data_athlete(resultats.set_index('course'))
     df = resultats
     df['Place'] = df['Place'].apply(lambda x: str(int(x)) if not numpy.isnan(x) else 'Non connu')
     for c in ['Scratch','Natation','Velo','Cap']:
         df[c] = df[c].apply(lambda x: ('%03d%%' % int(x)) if not numpy.isnan(x) else 'Non connu')
+
 
     datas = [('image',im) for im in images]
     datas = datas + [('table',prepare_table(df))]  

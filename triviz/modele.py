@@ -101,7 +101,12 @@ class TRICLAIRModele(object):
 
     def __load_ranking_athletes(self,year):
         """ Extract the main table in the pages http://www.triclair.com/resultats/challenge-triathlon-rhone-alpes.php?saison=[year]
-            which resumes the rank, name, sex, club and number of points of each athlete. Returns a Pandas. """  
+            which resumes the rank, name, sex, club and number of points of each athlete. Returns a Pandas. """ 
+        file_name = self.store_data + 'rankings-athletes-' + str(year) + '.csv'
+
+        if os.path.exists(file_name) and not self.online_version:
+            return pd.read_csv(file_name,encoding='utf8').drop('Unnamed: 0',axis=1)
+
         if year not in range(START_YEAR,datetime.datetime.today().year):
             return None
 
@@ -115,7 +120,11 @@ class TRICLAIRModele(object):
             columns.setdefault('name',   []).append(" ".join(col[1].text.split())) # 3: extract name, club and number of points
             columns.setdefault('club',   []).append(col[2].text[:-1])
             columns.setdefault('points', []).append(int(col[3].text))
-        return pd.DataFrame(columns).replace(u'',u'NON LICENCIE')
+
+        data = pd.DataFrame(columns).replace(u'',u'NON LICENCIE')
+        if self.store_data and not self.online_version:
+            data.to_csv(file_name, encoding='utf8')
+        return data       
 
     def __load_data_athlete(self,iden):
         """ Extract the main table of an athlete's page knowing its id provided in the DataFrame computed by GetDataAthletes()

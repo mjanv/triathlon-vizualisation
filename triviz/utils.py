@@ -119,7 +119,7 @@ def plot_data_athlete(resultats):
     plt.style.use('ggplot')
     figs = []
 
-    ax = resultats.plot(ylim=(90,round(max(map(max,resultats.values)))),kind='bar',rot=90,secondary_y=['Place'],figsize=(12,12))
+    ax = resultats.plot(ylim=(90,round(np.nanmax(map(np.nanmax,resultats.values)))),kind='bar',rot=90,secondary_y=['Place'],figsize=(12,12))
     plt.tight_layout(pad=2.0, w_pad=2.0, h_pad=2.0)
     ax.set_ylabel('Temps (% vainqueur)')
     ax.right_ax.set_ylabel('Classement')

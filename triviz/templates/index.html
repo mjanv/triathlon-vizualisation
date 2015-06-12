@@ -28,17 +28,25 @@
                 <input type="submit" class="btn btn-primary btn-lg" name="year" value="2014">
                 <input type="submit" class="btn btn-primary btn-lg disabled" name="year" value="2015">
             </div>
-        </form>
+        </form>    
     </div>
+    <div id="form">    
+        <form action="/chooseallyears" method="post">
+            <legend>Choisir une année</legend>
+            <div class="btn-group">
+                <input type="submit" class="btn btn-danger btn-lg" name="allyears" value="2010 à 2014">
+            </div>            
+        </form> 
+    </div>           
 </div> 
 
 {% if form_select_triathlon %}
 <div class="container"> 
     <div id="form">
         <form class="form-inline" action="/choosetriathlon" method="post">
-            <legend>Afficher les données d'un triathlon</legend> 
+            <legend>Afficher les données d'un triathlon de {{ year }}</legend> 
             <div class="form-group">
-                <select class="form-control" name="tri">
+                <select class="form-control" name="tri"> <!-- onchange="this.form.submit()"-->
                     {% for l in form_select_triathlon %}
                     <option value="{{ l[0] }};{{ l[1] }}">{{ l[0] }}</option>
                     {% endfor %}
@@ -52,7 +60,7 @@
                 <span class="input-group-addon" id="basic-addon1">Athlete</span>
                 <input type="text" class="form-control" name="athlete" placeholder="Nom Prénom">
             </div>              
-            <input type="submit" class="btn btn-default btn-sm" value="Launch">
+            <input type="submit" class="btn btn-default btn-sm" value="Launch">  
         </form>
     </div>  
 </div> 
@@ -62,13 +70,19 @@
 <div class="container">
     <div id="form">
         <form class="form-inline" action="/chooseathlete" method="post">
-            <legend>Afficher le résumé d'un triathlète</legend>  
+            <legend>Afficher le résumé d'un triathlète en {{ year }}</legend>  
             <div class="form-group">
                 <select class="form-control" name="athlete">
                     {% for name,id in form_select_athlete | dictsort %}
                     <option value="{{ name }};{{ id }};{{ year }}">{{ name | title }}</option>
                     {% endfor %}
                 </select>
+            <input list="Languages" />   
+<datalist id="Languages">  
+                    {% for name,id in form_select_athlete | dictsort %}
+                    <option value="{{ name }};{{ id }};{{ year }}">{{ name | title }}</option>
+                    {% endfor %} 
+</datalist>                 
             </div>  
 
             <input type="submit" class="btn btn-default btn-sm" value="Launch">
