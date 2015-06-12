@@ -95,19 +95,24 @@ def chooseathlete():
 
     resultats = []
     for triathlon,name,forma in zip(triathlons,D['course'],D['format']):
-        tri = pd.concat([triathlon.loc[:,:'Sexe'],triathlon.loc[:,'Scratch':].apply(utils.normalize_col)],axis=1).dropna()
-        resultat = tri[ (tri['Nom']== name_athlete) | 
-                        (tri['Nom'] == ' '.join(name_athlete.split(' ',1)[::-1])) ]
+        tri = pd.concat([triathlon.loc[:,:'Sexe'],triathlon.loc[:,'Scratch':].apply(utils.normalize_col)],axis=1)
+        resultat = tri[ (tri['Nom'] == name_athlete) | 
+                        (tri['Nom'] == ' '.join(name_athlete.split(' ',1)[::-1])) |
+                        (tri['Nom'] == name_athlete.replace ("-", " ")) | 
+                        (tri['Nom'] == ' '.join(name_athlete.split(' ',1)[::-1]).replace ("-", " ")) 
+                    ]
         if resultat.empty: 
             resultat = pd.DataFrame(columns=resultat.columns,index=[0])
         resultats.append(resultat.loc[:,['Place','Scratch','Natation','Velo','Cap']].values[0].tolist())        
     resultats = pd.concat([D['course'],pd.DataFrame(resultats,columns=['Place','Scratch','Natation','Velo','Cap'])],axis=1)
+
 
     images = utils.plot_data_athlete(resultats.set_index('course'))
     df = resultats
     df['Place'] = df['Place'].apply(lambda x: str(int(x)) if not numpy.isnan(x) else 'Non connu')
     for c in ['Scratch','Natation','Velo','Cap']:
         df[c] = df[c].apply(lambda x: ('%03d%%' % int(x)) if not numpy.isnan(x) else 'Non connu')
+
 
     datas = [('image',im) for im in images]
     datas = datas + [('table',prepare_table(df))]  
