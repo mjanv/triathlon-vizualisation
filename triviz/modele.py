@@ -147,11 +147,11 @@ class TRICLAIRModele(object):
         """ TODO """
         file_name = self.store_data + link.split('.')[0] + '.csv'
 
-        if not self.online_version:
-            if os.path.exists(file_name):
-                return pd.read_csv(file_name,encoding='utf8',
-                                parse_dates=['Cap','Natation','Scratch','Velo'], 
-                                date_parser=pd.to_timedelta).drop('Unnamed: 0',axis=1)
+        #if not self.online_version:
+        if os.path.exists(file_name):
+            return pd.read_csv(file_name,encoding='utf8',
+                              parse_dates=['Cap','Natation','Scratch','Velo'], 
+                             date_parser=pd.to_timedelta).drop('Unnamed: 0',axis=1)
 
 
 
