@@ -18,6 +18,7 @@ import os.path
 
 from deco import echo
 from utils import *
+from socket import gethostname
 
 from collections import OrderedDict
 
@@ -33,10 +34,10 @@ class TRICLAIRModele(object):
     _data_triathlon = {}
     _data_athletes = {}
 
-    def __init__(self,verbose=True,store_data='data/',online_version=False):
+    def __init__(self,verbose=True,store_data='data/'):
         self.verbose = verbose
         self.store_data = store_data
-        self.online_version = online_version
+        self.online_version = 'liveconsole' in gethostname()
 
     @echo('Loading list of triathlons')
     def get_list_triathlons(self,year):

@@ -46,7 +46,7 @@
         <form class="form-inline" action="/choosetriathlon" method="post">
             <legend>Afficher les données d'un triathlon de {{ year }}</legend> 
             <div class="form-group">
-                <select class="form-control" name="tri"> <!-- onchange="this.form.submit()"-->
+                <select class="form-control" name="tri">
                     {% for l in form_select_triathlon %}
                     <option value="{{ l[0] }};{{ l[1] }}">{{ l[0] }}</option>
                     {% endfor %}
@@ -54,13 +54,15 @@
             </div>  
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Position</span>
-                <input type="text" class="form-control" name="max" placeholder="N premiers">
+                <input type="text" class="form-control" name="max" placeholder="Garder les N premiers">
             </div>
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Athlete</span>
                 <input type="text" class="form-control" name="athlete" placeholder="Nom Prénom">
-            </div>              
-            <input type="submit" class="btn btn-default btn-sm" value="Launch">  
+            </div>
+            <label class="radio-inline"><input type="radio" name="hommes">Hommes</label> 
+            <label class="radio-inline"><input type="radio" name="femmes">Femmes</label>               
+            <input type="submit" class="btn btn-default btn-sm" value="Go">  
         </form>
     </div>  
 </div> 
@@ -79,7 +81,7 @@
                 </select>             
             </div>  
 
-            <input type="submit" class="btn btn-default btn-sm" value="Launch">
+            <input type="submit" class="btn btn-default btn-sm" value="Go">
         </form>
     </div>
 </div>

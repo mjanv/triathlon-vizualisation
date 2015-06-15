@@ -91,7 +91,7 @@ def plot_data_triathlon(rankings,head=None,name_athlete=None,filters=None):
         data = rankings[title]
         (mu,sigma) = norm.fit(data)
         #nbins = round((max(data)-min(data))/(2*(np.percentile(data,0.75)-np.percentile(data,0.25))*len(data)**(-1.0/3)))
-        n, bins, patches = axes[ind].hist(data,nb_athletes/10, facecolor=cl(ind), alpha=0.7)
+        n, bins, patches = axes[ind].hist(data.values,nb_athletes/10, facecolor=cl(ind), alpha=0.7)
         if name_athlete is not None:
             axes[ind].axvline(resultat[title].values[0],color='red',linestyle='dashed')
         axes[ind].plot(bins, max(bins)*mlab.normpdf(bins, mu, sigma), '-',color='gray', linewidth=4,label=r'$\mu=%.3f,\ \sigma=%.3f$' %(mu, sigma))

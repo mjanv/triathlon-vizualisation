@@ -14,7 +14,7 @@ import pandas as pd
 from collections import Counter
 
 app = Flask(__name__,static_url_path='/static')
-triviz = modele.TRICLAIRModele(online_version=False)
+triviz = modele.TRICLAIRModele()
 
 @app.route('/')
 def render_index():
@@ -75,16 +75,24 @@ def choosetriathlon():
         name_triathlon,link = request.form['tri'].split(';')
         max_request = request.form['max']
         athlete = request.form['athlete']
+        femmes = 'femmes' in request.form
+        hommes = 'femmes' in request.form
     else:    
         name_triathlon = request.args.get('tri')
         link = request.args.get('link')
         max_request = request.args.get('max')
         athlete = request.args.get('athlete')        
-    print name_triathlon,max_request,link,athlete
+    
     L = triviz.get_data_triathlon(link)
 
+    if femmes:  
+        L = L[L['Sexe']=='F']  
+    if hommes:  
+        L = L[L['Sexe']=='M']        
+   
+
     rank_max = int(max_request if max_request else len(L))
-    name = athlete if athlete else None   
+    name = athlete.upper() if athlete else None   
     images = utils.plot_data_triathlon(L,head=rank_max,name_athlete=name)
 
     datas = [('image',im) for im in images]
@@ -92,6 +100,7 @@ def choosetriathlon():
 
     title = (name_triathlon + ' [' + athlete + ']') if athlete else name_triathlon
 
+    print 'coucou'
     return render_template('data.html',title=title ,datas=datas)
 
 @app.route('/chooseathlete', methods = ['POST','GET'])
@@ -141,6 +150,7 @@ def chooseathlete():
 @app.template_filter('format_table')
 def format_table(obj):
     """ Jinja filter for formatting elements in <td></td> """
+    print '+++++++++++++',obj.__class__,obj
     try:
         if isinstance(obj,pd.tslib.Timestamp):  
             return datetime.datetime.strptime(str(obj), "%Y-%m-%d %H:%M:%S").strftime('%d/%m/%Y')
@@ -155,9 +165,11 @@ def format_table(obj):
             if obj.endswith('.htm'):    
                 link = 'http://www.triclair.com' + obj    
                 return '<a href="%s">%s</a>' % (link,link)
-                
+        
+        print '------------',obj.__class__,obj        
         return obj 
     except:
+        print '$$$$$$$',obj.__class__,obj
         return obj    
 
 def prepare_table(P):
