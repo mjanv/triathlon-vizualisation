@@ -78,7 +78,7 @@ class TRICLAIRModele(object):
             which resumes the date, name, format, and link of each triathlon of the specified year. Returns a Pandas DataFrame. """ 
         file_name = self.store_data + 'list-triathlons-' + str(year) + '.csv'
 
-        if not self.online_version:
+        #if not self.online_version:
         if os.path.exists(file_name):
             return pd.read_csv(file_name,encoding='utf8',
                             parse_dates=['date'], 
