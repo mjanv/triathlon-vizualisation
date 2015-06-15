@@ -65,8 +65,6 @@ def chooseallyears():
         tab = prepare_table(l)
         datas = datas + [('table',tab)]
 
- 
-
     return render_template('data.html',title="",datas=datas)
 
 @app.route('/choosetriathlon', methods = ['POST','GET'])
@@ -81,16 +79,20 @@ def choosetriathlon():
         name_triathlon = request.args.get('tri')
         link = request.args.get('link')
         max_request = request.args.get('max')
-        athlete = request.args.get('athlete')        
+        athlete = request.args.get('athlete')
+        femmes = False
+        hommes = False        
     
     L = triviz.get_data_triathlon(link)
 
-    if femmes:  
-        L = L[L['Sexe']=='F']  
-    if hommes:  
-        L = L[L['Sexe']=='M']        
+    if femmes and hommes:
+        pass
+    else:    
+        if femmes:  
+            L = L[L['Sexe']=='F']  
+        if hommes:  
+            L = L[L['Sexe']=='M']   
    
-
     rank_max = int(max_request if max_request else len(L))
     name = athlete.upper() if athlete else None   
     images = utils.plot_data_triathlon(L,head=rank_max,name_athlete=name)
@@ -150,27 +152,25 @@ def chooseathlete():
 @app.template_filter('format_table')
 def format_table(obj):
     """ Jinja filter for formatting elements in <td></td> """
-    print '+++++++++++++',obj.__class__,obj
-    try:
-        if isinstance(obj,pd.tslib.Timestamp):  
-            return datetime.datetime.strptime(str(obj), "%Y-%m-%d %H:%M:%S").strftime('%d/%m/%Y')
+    if isinstance(obj,long):
+        return str(datetime.timedelta(seconds=obj/10**9))
 
-        if isinstance(obj,pd.tslib.Timedelta):
-            return '%02d:%02d:%02d' % (obj.hours,obj.minutes,obj.seconds)
+    if isinstance(obj,pd.tslib.Timestamp):  
+        return datetime.datetime.strptime(str(obj), "%Y-%m-%d %H:%M:%S").strftime('%d/%m/%Y')
 
-        if isinstance(obj,numpy.timedelta64):
-            return obj.tolist()   
+    #Only available for pandas >0.15
+    #if isinstance(obj,pd.tslib.Timedelta):
+    #    return '%02d:%02d:%02d' % (obj.hours,obj.minutes,obj.seconds)
 
-        if isinstance(obj,str):
-            if obj.endswith('.htm'):    
-                link = 'http://www.triclair.com' + obj    
-                return '<a href="%s">%s</a>' % (link,link)
-        
-        print '------------',obj.__class__,obj        
-        return obj 
-    except:
-        print '$$$$$$$',obj.__class__,obj
-        return obj    
+    if isinstance(obj,numpy.timedelta64):
+        return obj.tolist()   
+
+    if isinstance(obj,str):
+        if obj.endswith('.htm'):    
+            link = 'http://www.triclair.com' + obj    
+            return '<a href="%s">%s</a>' % (link,link)
+
+    return obj
 
 def prepare_table(P):
     return dict({ 'head': P.keys().tolist(), 'rows': P.values.tolist() })
